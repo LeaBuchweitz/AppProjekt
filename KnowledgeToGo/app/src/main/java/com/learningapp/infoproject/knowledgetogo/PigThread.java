@@ -223,9 +223,9 @@ class PigThread extends Thread {
             mCanvasHeight = height;
 
             // don't forget to resize the background image
-            mBackgroundImage = Bitmap.createScaledBitmap(mBackgroundImage, mBackgroundImage.getWidth() * height / mBackgroundImage.getHeight(), height, true);
-            mBackgroundImageWidth = mBackgroundImage.getWidth() * mCanvasHeight / mBackgroundImage.getHeight();
-        }
+	    mBackgroundImageWidth = mBackgroundImage.getWidth() * mCanvasHeight / mBackgroundImage.getHeight();
+            mBackgroundImage = Bitmap.createScaledBitmap(mBackgroundImage, mBackgroundImageWidth, true);
+    	}
     }
 
     public boolean getRunningState(){
