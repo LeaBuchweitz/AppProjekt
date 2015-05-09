@@ -1,33 +1,23 @@
 package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-
+import org.apmem.tools.layouts.FlowLayout;
 import java.util.ArrayList;
 
 
 public class QuestionModePigActivity extends Activity {
 
+    private FlowLayout layout;
+    private SurfaceAnimation animation;
     private ArrayList<EditText> editTextList;
 
-    private LinearLayout linearLayout;
-
     private String downloadedText;
-
     private int score;
-
-    private SurfaceAnimation animation;
-
-
+    private boolean modeIsSend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +26,10 @@ public class QuestionModePigActivity extends Activity {
 
         score = 0;
 
-        linearLayout = (LinearLayout) findViewById(R.id.question_layout);
+        layout = (FlowLayout) findViewById(R.id.flow_layout);
         animation = (SurfaceAnimation) findViewById(R.id.surfaceDrawing);
 
+        modeIsSend = true;
         nextTask();
 
 
@@ -46,28 +37,34 @@ public class QuestionModePigActivity extends Activity {
 
     /**
      * OnClick action. Checks Text.
-     *
-     * @param view Context
      */
-    public void checkText(View view) {
+    public void checkText() {
         ArrayList<String> entries = new ArrayList<>();
         for (EditText text : editTextList) {
             entries.add(text.getText().toString());
         }
 
-        linearLayout.removeAllViews();
-        score += Parser.createSolve(downloadedText, entries, linearLayout, this);
+        layout.removeAllViews();
+        score += Parser.createSolve(downloadedText, entries, layout, this);
         animation.getThread().setScore(score);
     }
 
     public void nextTask(View view){
-        nextTask();
+        if (modeIsSend){
+            ((Button) findViewById(R.id.button_send)).setText(getString(R.string.button_next));
+            modeIsSend = false;
+            checkText();
+        } else {
+            ((Button) findViewById(R.id.button_send)).setText(getString(R.string.button_send));
+            modeIsSend = true;
+            nextTask();
+        }
     }
 
     public void nextTask(){
-        linearLayout.removeAllViews();
-        downloadedText = "Ach, das {ist} ein toller {LÃ¼ckentext}.";
-        editTextList = Parser.createGapText(downloadedText, linearLayout, this);
+        layout.removeAllViews();
+        downloadedText = "Ach, das {ist} ein toller {Lückentext}. afdasfdsa dfasf asdf asfkjdsa huasd hbfdasfuzi adhsjufi ahfudasuf iash fdhuasi hfdaso {fdas} fdsa ";
+        editTextList = Parser.createGapText(downloadedText, layout, this);
     }
 
     public void pauseAnimation(View view) {
@@ -76,6 +73,10 @@ public class QuestionModePigActivity extends Activity {
             return;
         }
         animation.getThread().unpause();
+    }
+
+    public void jump(View view){
+        animation.getThread().pigJump(1000,1000);
     }
 
 }

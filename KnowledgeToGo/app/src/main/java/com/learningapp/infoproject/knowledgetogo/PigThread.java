@@ -222,4 +222,13 @@ class PigThread extends Thread {
         return mScore;
     }
 
+
+    /**
+     * Initiates Pig-Jump with
+     * @param duration in ms
+     */
+    public void pigJump(double duration, double delay){
+        pig.jump(duration,delay,System.currentTimeMillis());
+    }
+
 }
