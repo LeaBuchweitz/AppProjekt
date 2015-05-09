@@ -54,6 +54,9 @@ class PigThread extends Thread {
 
     // Background
     private Bitmap mBackgroundImage;
+    private int mBackgroundImageX;
+    private int mBackgroundImageY;
+    private int mBackgroundImageWidth;
 
     // Walkcycle
     private Pig pig;
@@ -85,6 +88,9 @@ class PigThread extends Thread {
 
             mImageX = mCanvasHeight/2;
             mImageY = mCanvasWidth/2;
+
+            mBackgroundImageX = 0;
+            mBackgroundImageY = 0;
 
             pig = new Pig(mResources, mCanvasHeight, mCanvasWidth);
 
@@ -163,6 +169,10 @@ class PigThread extends Thread {
         mImageX = mImageX < mCanvasWidth ? mImageX + (int) Math.round(mSpeed * elapsed) : - image.getIntrinsicWidth()/20;
         mImageY = mImageY < mCanvasHeight ? mImageY + (int) Math.round(mSpeed * elapsed) : - image.getIntrinsicHeight()/20;
 
+        mBackgroundImageX = mBackgroundImageX + mBackgroundImageWidth > 0 ?
+                mBackgroundImageX - (int) Math.round(mSpeed * elapsed) :
+                mBackgroundImageWidth;
+
         mLastTime = now;
     }
 
@@ -172,7 +182,14 @@ class PigThread extends Thread {
     private void doDraw(Canvas canvas) {
         // Draw the background image. Operations on the Canvas accumulate
         // so this is like clearing the screen.
-        canvas.drawBitmap(mBackgroundImage, 0, 0, null);
+        canvas.drawColor(Color.rgb(160,170,240));
+
+        canvas.drawBitmap(mBackgroundImage, mBackgroundImageX, mBackgroundImageY, null);
+        canvas.drawBitmap(mBackgroundImage,
+                mBackgroundImageX < 0 ?
+                        mBackgroundImageX + mBackgroundImageWidth :
+                        mBackgroundImageX - mBackgroundImageWidth
+                , mBackgroundImageY, null);
 
         image.setBounds(mImageX, mImageY, mImageX + image.getIntrinsicWidth() / 20, mImageY + image.getIntrinsicHeight() / 20);
         image.draw(canvas);
@@ -206,7 +223,8 @@ class PigThread extends Thread {
             mCanvasHeight = height;
 
             // don't forget to resize the background image
-            mBackgroundImage = Bitmap.createScaledBitmap(mBackgroundImage, width, height, true);
+            mBackgroundImage = Bitmap.createScaledBitmap(mBackgroundImage, mBackgroundImage.getWidth() * height / mBackgroundImage.getHeight(), height, true);
+            mBackgroundImageWidth = mBackgroundImage.getWidth() * mCanvasHeight / mBackgroundImage.getHeight();
         }
     }
 

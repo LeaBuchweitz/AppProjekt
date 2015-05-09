@@ -52,7 +52,7 @@ public class Pig {
         mWalkWidth = mWalk.getWidth() / (mFrameCount + mAdditionalFrames); // + for additional Frames
         mWalkHeight = mWalk.getHeight();
         mWalkX = mCanvasHeight / 2 - mWalkHeight / 2;
-        mWalkY = mCanvasWidth / 2 - mWalkWidth / 2;
+        mWalkY = mCanvasWidth / 2 - mWalkWidth / 2 + 26;
         mWalkYCurrent = mWalkY;
         mRotation = 0;
 
