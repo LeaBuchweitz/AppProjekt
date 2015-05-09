@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">KnowledgeToGo</string>
+    <string name="title_activity_surface_animation">Titel</string>
+    <string name="title_activity_pig_thread">Titel</string>
+
+
+    <!-- Login-Page -->
+    <string name="login_name">Login-Name</string>
+    <string name="password">Passwort</string>
+    <string name="button_login">Login</string>
+    <string name="title_activity_register">Registrieren</string>
+
+    <!-- Register to new Account -->
+    <string name="enter_name">Gib deinen Benutzernamen ein</string>
+    <string name="enter_password">Gib dein Passwort ein</string>
+    <string name="verify_password">Bestätige dein Passwort</string>
+    <string name="register">Registrieren</string>
+    <string name="title_activity_choose_mode">ChooseModeActivity</string>
+
+    <!-- Choose mode of learning  -->
+    <string name="choose_mode">Wähle deinen Lernmodus</string>
+    <string name="learn_mode">Lernen</string>
+    <string name="exam_mode">Abfrage</string>
+    <string name="add_mode">Hinzufügen</string>
+    <string name="title_activity_question_mode_pig">QuestionModePigActivity</string>
+    <string name="title_activity_add__gap__question_">Add_Gap_Question_Activity</string>
+
+    <!-- Add question -->
+    <string name="add_question">Gib einen Titel ein</string>
+    <string name="add_text">Gib deinen Text ein</string>
+    <string name="send_to_server">Abschicken</string>
+    <string name="add_gaps">Ich habe die Lücken selbst durch { } markiert</string>
+    <string name="title_activity_add__normal__question_">Add_Normal_Question_Activity</string>
+
+
+</resources>

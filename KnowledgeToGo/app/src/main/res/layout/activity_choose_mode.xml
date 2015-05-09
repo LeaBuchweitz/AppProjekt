@@ -1,0 +1,79 @@
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawer">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignTop="@+id/menu"
+        android:layout_alignRight="@+id/menu"
+        android:layout_alignEnd="@+id/menu"
+        android:background="#ffffffff">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/learn_mode"
+        android:id="@+id/learn"
+        android:layout_marginTop="46dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/exam"
+        android:layout_alignStart="@+id/exam"
+        android:layout_alignRight="@+id/exam"
+        android:layout_alignEnd="@+id/exam" />
+
+        <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/exam_mode"
+        android:id="@+id/exam"
+        android:layout_marginTop="57dp"
+        android:layout_below="@+id/learn"
+        android:layout_alignLeft="@+id/add_question"
+        android:layout_alignStart="@+id/add_question"
+        android:layout_alignRight="@+id/add_question"
+        android:layout_alignEnd="@+id/add_question" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_mode"
+        android:id="@+id/add_question"
+        android:layout_marginTop="59dp"
+        android:layout_below="@+id/exam"
+        android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_list"
+        android:layout_below="@+id/add_question"
+        android:layout_alignLeft="@+id/add_question"
+        android:layout_alignStart="@+id/add_question"
+        android:layout_alignRight="@+id/add_question"
+        android:layout_alignEnd="@+id/add_question"
+        android:visibility="invisible" />
+
+    <ImageButton
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:id="@+id/choose_lecture"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:scaleType="fitCenter" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:layout_gravity="start"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/lecture_menu"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</android.support.v4.widget.DrawerLayout>

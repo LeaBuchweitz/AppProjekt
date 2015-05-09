@@ -1,0 +1,104 @@
+; Mikulasch, Buchweitz
+; Blatt 02
+; Aufgabe 01
+
+((lambda (a) a)
+ (+ ((lambda (a) (+ a 2)) 3) 2))
+
+--> [apply_lambda]
+
+((lambda (a) a)
+ (+ (+ 3 2) 2))
+
+--> [eval_id]
+--> [apply_prim]
+
+((lambda (a) a) (+ 5 2))
+
+--> [eval_id]
+--> [apply_prim]
+
+((lambda (a) a) 7)
+
+--> [apply_lambda]
+
+7
+
+---------------------------------------------------
+
+(define pi 3.141)
+(* 2 pi)
+
+--> [eval_id]
+
+(define pi 3.141)
+(* 2 3.141)
+
+--> [eval_id]
+--> [apply_prim]
+
+(define pi 3.141)
+6.282
+
+---------------------------------------------------
+
+((lambda (pi) (* 2 pi)) pi)
+
+--> [eval_id]
+
+((lambda (pi) (* 2 pi))
+ 3.141)
+
+--> [apply_lambda]
+
+(* 2 3.141)
+
+--> [eval_id]
+--> [apply_prim]
+
+6.282
+
+---------------------------------------------------
+
+(define quadrat
+  (lambda (n) (* n n)))
+(quadrat (+ 4 2))
+
+--> [eval_id]
+
+(define quadrat
+  (lambda (n) (* n n)))
+((lambda (n) (* n n))
+ (+ 4 2))
+
+--> [eval_id]
+--> [apply_prim]
+
+(define quadrat
+  (lambda (n) (* n n)))
+((lambda (n) (* n n)) 6)
+
+--> [apply_lambda]
+--> [eval_lambda]
+
+(* 6 6)
+
+--> [eval_id]
+--> [apply_prim]
+
+36
+
+---------------------------------------------------
+
+((lambda (x) x)
+ (lambda (x) x))
+
+--> [apply_lambda]
+
+(lambda (x) x)
+
+--> [eval_lambda]
+
+()
+
+

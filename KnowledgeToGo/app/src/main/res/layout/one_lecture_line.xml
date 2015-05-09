@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp"
+    android:layout_height="50dp"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:textStyle="bold"
+    android:paddingTop="15dp"
+    android:paddingLeft="15dp"
+    android:text="Large Text"
+    android:id="@+id/menu_item"
+    android:textColor="#ffffffff" />

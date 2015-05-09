@@ -1,0 +1,38 @@
+; Mikulasch, Buchweitz
+; Blatt 02
+; Aufgabe 02
+
+Regel zur Übersetzung von cond (ohne else) in if:
+
+(1) Jeder Test <t_1> aus der cond-Anweisung wird in der if-Prozedur ebenfalls als Test ausgewertet
+--> (cond <t_1> ...)
+--> (if <t_1> ...) 
+
+(2) Im Fall, dass der Test <t_1> in der if-Anweisung als wahr ausgewertet wird, ist <e_1> der cond-Anweisung der nächste auszuwertende Ausdruck
+--> (cond <t_1> <e_1> ...)
+--> (if <t_1> 
+	<e_1> ...) 
+
+(3) Sollte <t_1> in der if-Anweisung als falsch ausgewertet werden, so beginnt der nächste Test mit <t_2> der cond-Anweisung in einer neuen (in die alte geschachtelte) if-Anweisung
+--> (cond <t_1> <e_1> 
+	  <t_2> ...)
+--> (if <t_1> 
+	<e_1> 
+	(if <t_2> ...)
+
+Dieses Verfahren wird fortgeführt, bis alle Tests bis <t_n> der cond-Anweisung in einer if-Anweisung auf ihren bool'schen Wert ausgewertet wurden und keine weiteren <e_n> mehr übrig bleiben, die mit den ausgewerteten bool'schen Werten durchgeführt werden könnten.
+(4) Um einen Abbruch des Programms zu verhindern, wird noch folgende Zeile angehängt 
+
+--> (cond <t_1> <e_1> 
+	  <t_2> <e_2>
+	  ...
+	  <t_n> <e_n>
+	  (violation "Kein Test im cond-Ausdruck war wahr"))
+--> (if <t_1> 
+	<e_1> 
+	(if <t_2> 
+	<e_2>
+	(...
+	(violation "Kein Test im if-Ausdruck war wahr")
+
+Da diese (in der Aufgabe angegebene) cond-Anweisung keinen else-Fall hat, würde das Programm nachdem alle Tests der if-Konstruktion mit false ausgewertet wurden, einfach abbrechen, da keine Anweisung gegeben wurde, was dann passieren soll. Die Fehlermeldung fängt diesen 'ungewollten' Abbruch ab.
