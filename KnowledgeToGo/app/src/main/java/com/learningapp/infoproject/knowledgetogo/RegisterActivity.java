@@ -1,5 +1,6 @@
 package com.learningapp.infoproject.knowledgetogo;
 
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,7 +8,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,12 +16,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 
@@ -84,8 +81,7 @@ public class RegisterActivity extends Activity {
                         // Give Info to NetworkController and Handler
                         sendRequest(RegisterActivity.this, userName, null, false);
                     }
-                    // Insert new User
-
+                    // If request was sent you can't press the button
                     if (userNameAvailable) {
                         requestSent = true;
                     }

@@ -2,6 +2,7 @@ package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,13 +16,34 @@ public class QuestionModePigActivity extends Activity {
     private SurfaceAnimation animation;
     private ArrayList<EditText> editTextList;
 
+    private ArrayList<String> questionContent;
+    private ArrayList<Integer> questionType;
+    private ArrayList<Integer> questionID;
+
+    private int lectureID;
+
     private String downloadedText;
+    private int questionCounter;
     private int score;
+
+    // Indicates which mode: true - shows the question, false - shows the answer
     private boolean modeIsSend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        lectureID = 1;
+
+        questionCounter = 0;
+        questionContent = new ArrayList<>();
+        questionType = new ArrayList<>();
+        questionID = new ArrayList<>();
+
+        new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
+                "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid="+Integer.toString(lectureID),
+                questionContent, questionType, questionID).start();
+
         setContentView(R.layout.activity_question_mode_pig);
 
         score = 0;
@@ -30,41 +52,64 @@ public class QuestionModePigActivity extends Activity {
         animation = (SurfaceAnimation) findViewById(R.id.surfaceDrawing);
 
         modeIsSend = true;
-        nextTask();
+        startTask();
+    }
+
+    private void startTask() {
+        modeIsSend = false;
+    }
+
+    public void nextTask(View view){
+        if (questionCounter < questionContent.size()) {
+            if (modeIsSend) {
+                ((Button) findViewById(R.id.button_send)).setText(getString(R.string.button_next));
+                modeIsSend = false;
+                answerTask();
+            } else {
+                ((Button) findViewById(R.id.button_send)).setText(getString(R.string.button_send));
+                modeIsSend = true;
+                questionTask();
+            }
+        } else {
+            endTask();
+        }
+    }
 
 
+    /**
+     * Creates new question
+     */
+    public void questionTask(){
+        layout.removeAllViews();
+        downloadedText = questionContent.get(questionCounter);
+        switch(questionType.get(questionCounter)) {
+            case 1:
+                editTextList = Parser.createGapText(downloadedText, layout, this);
+                break;
+
+        }
     }
 
     /**
      * OnClick action. Checks Text.
      */
-    public void checkText() {
+    public void answerTask() {
         ArrayList<String> entries = new ArrayList<>();
         for (EditText text : editTextList) {
             entries.add(text.getText().toString());
         }
 
         layout.removeAllViews();
-        score += Parser.createSolve(downloadedText, entries, layout, this);
+
+        score += Parser.createSolve(downloadedText, entries, layout, this) * 10;
         animation.getThread().setScore(score);
+
+        questionCounter++;
     }
 
-    public void nextTask(View view){
-        if (modeIsSend){
-            ((Button) findViewById(R.id.button_send)).setText(getString(R.string.button_next));
-            modeIsSend = false;
-            checkText();
-        } else {
-            ((Button) findViewById(R.id.button_send)).setText(getString(R.string.button_send));
-            modeIsSend = true;
-            nextTask();
-        }
-    }
 
-    public void nextTask(){
-        layout.removeAllViews();
-        downloadedText = "Ach, das {ist} ein toller {Lückentext}. afdasfdsa dfasf asdf asfkjdsa huasd hbfdasfuzi adhsjufi ahfudasuf iash fdhuasi hfdaso {fdas} fdsa ";
-        editTextList = Parser.createGapText(downloadedText, layout, this);
+    private void endTask() {
+        //...
     }
 
     public void pauseAnimation(View view) {
@@ -77,6 +122,9 @@ public class QuestionModePigActivity extends Activity {
 
     public void jump(View view){
         animation.getThread().pigJump(1000,1000);
+        for (int i = 0; i < questionContent.size(); i++) {
+            Log.i("", questionContent.get(i));
+        }
     }
 
 }
