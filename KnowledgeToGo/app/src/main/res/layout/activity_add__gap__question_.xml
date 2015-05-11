@@ -40,7 +40,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/text"
+        android:id="@+id/first_answer"
         android:layout_below="@+id/text_lücken"
         android:background="@null"
         android:layout_alignParentLeft="true"

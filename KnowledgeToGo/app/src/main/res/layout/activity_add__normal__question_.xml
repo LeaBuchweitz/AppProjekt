@@ -39,7 +39,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/text"
+        android:id="@+id/first_answer"
         android:layout_below="@+id/text_lücken"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -52,7 +52,63 @@
         android:layout_height="wrap_content"
         android:text="@string/send_to_server"
         android:id="@+id/save_question"
-        android:layout_alignParentBottom="true"
+        android:layout_marginTop="33dp"
+        android:layout_below="@+id/forth_answer"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_answer"
+        android:id="@+id/add_answer"
+        android:layout_alignBaseline="@+id/save_question"
+        android:layout_alignBottom="@+id/save_question"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/second_answer"
+        android:layout_below="@+id/first_answer"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/first_answer"
+        android:layout_alignEnd="@+id/first_answer"
+        android:visibility="gone" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/third_answer"
+        android:visibility="gone"
+        android:layout_below="@+id/second_answer"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/second_answer"
+        android:layout_alignEnd="@+id/second_answer" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/forth_answer"
+        android:visibility="gone"
+        android:layout_below="@+id/third_answer"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/less_answer"
+        android:id="@+id/less_answer"
+        android:layout_alignTop="@+id/save_question"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

@@ -22,7 +22,8 @@
         android:layout_alignLeft="@+id/exam"
         android:layout_alignStart="@+id/exam"
         android:layout_alignRight="@+id/exam"
-        android:layout_alignEnd="@+id/exam" />
+        android:layout_alignEnd="@+id/exam"
+        android:textStyle="bold" />
 
         <Button
         android:layout_width="wrap_content"
@@ -34,7 +35,8 @@
         android:layout_alignLeft="@+id/add_question"
         android:layout_alignStart="@+id/add_question"
         android:layout_alignRight="@+id/add_question"
-        android:layout_alignEnd="@+id/add_question" />
+        android:layout_alignEnd="@+id/add_question"
+            android:textStyle="bold" />
 
     <Button
         android:layout_width="wrap_content"
@@ -43,7 +45,8 @@
         android:id="@+id/add_question"
         android:layout_marginTop="59dp"
         android:layout_below="@+id/exam"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
 
     <ListView
         android:layout_width="wrap_content"

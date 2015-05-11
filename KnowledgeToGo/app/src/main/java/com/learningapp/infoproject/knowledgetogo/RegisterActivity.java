@@ -97,13 +97,13 @@ public class RegisterActivity extends Activity {
     //sending data to the webpage and get current weather data back
     public void sendRequest(Context context, String userName, String password, boolean insert) {
         //creating NetworkController
-        new NetworkController(context, userName, password, userExistsHandler, insert).start();
+        new NetworkController(context, userName, password, registerHandler, insert).start();
     }
 
     //sending data to the webpage and get current weather data back
     public void sendInsertRequest() {
         //creating NetworkController
-        new NetworkController(this, name.getText().toString(), password.getText().toString(), userExistsHandler, true).start();
+        new NetworkController(this, name.getText().toString(), password.getText().toString(), registerHandler, true).start();
     }
 
     @Override
@@ -187,7 +187,7 @@ public class RegisterActivity extends Activity {
     }
 
     //sets up new handler
-    private final Handler userExistsHandler = new Handler() {
+    private final Handler registerHandler = new Handler() {
 
         public void handleMessage(Message responseServerMessage) {
             //gets the message with info from handler (bundle) if userName is already used
