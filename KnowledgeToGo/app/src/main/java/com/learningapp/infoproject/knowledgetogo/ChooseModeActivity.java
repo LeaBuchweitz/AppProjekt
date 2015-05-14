@@ -105,7 +105,7 @@ public class ChooseModeActivity extends Activity {
         addQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(addList.getVisibility() == 0) {
+                if(addList.getVisibility() == View.GONE) {
                     addList.setVisibility(View.INVISIBLE);
                 } else {
                     addList.setVisibility(View.VISIBLE);
@@ -139,6 +139,9 @@ public class ChooseModeActivity extends Activity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
