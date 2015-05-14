@@ -9,6 +9,7 @@
     <string name="password">Passwort</string>
     <string name="button_login">Login</string>
     <string name="no_user">Du bist noch nicht registriert, bitte melde dich an!</string>
+    <string name="wrong_password">Falsches Passwort!</string>
     <string name="title_activity_register">Registrieren</string>
 
     <!-- Register to new Account -->

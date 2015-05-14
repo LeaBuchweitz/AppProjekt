@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,6 +26,8 @@ import java.net.URL;
 
 public class LoginBeginActivity extends Activity {
 
+    private EditText name;
+    private EditText password;
     private String userName;
     private String userPassword;
     private boolean loginOk;
@@ -34,8 +38,8 @@ public class LoginBeginActivity extends Activity {
         setContentView(R.layout.activity_login_begin);
 
         // Import layout features
-        EditText name = (EditText) findViewById(R.id.login_name);
-        EditText password = (EditText) findViewById(R.id.enterPassword);
+        name = (EditText) findViewById(R.id.login_name);
+        password = (EditText) findViewById(R.id.enterPassword);
         Button login = (Button) findViewById(R.id.login);
         TextView createAccount = (TextView) findViewById(R.id.newAccount);
         ImageView pig = (ImageView) findViewById(R.id.schwein_steht);
@@ -53,23 +57,29 @@ public class LoginBeginActivity extends Activity {
             }
         });
 
-        // Get inserted information from login
-        userName = name.getText().toString();
-        userPassword = password.getText().toString();
-
         // Set ClickListener on "login"-Button
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Creater NetworkController and Handler to send request to server
-               //                                new NetworkController(userName, userPassword, LoginHandler).start();
+
+                // Get inserted information from login
+                userName = name.getText().toString();
+                userPassword = password.getText().toString();
+
+                // Creates NetworkController and Handler to send request to server
+                new NetworkController(userName, "userNameAvailable&name=", LoginHandler).start();
+
                 // Go to chooseMode-Activity
-                //if(loginOk) {
+                if(loginOk) {
                     Intent chooseMode = new Intent(LoginBeginActivity.this, ChooseModeActivity.class);
                     startActivity(chooseMode);
-                //}
+                }
             }
         });
+
+    }
+    @Override
+    public void onBackPressed() {
 
     }
 
@@ -98,12 +108,12 @@ public class LoginBeginActivity extends Activity {
 
     private class NetworkController extends Thread {
         private String name;
-        private String password;
+        private String function;
         private Handler resultHandler;
 
-        public NetworkController (String name, String password, Handler resultHandler) {
+        public NetworkController (String name, String function, Handler resultHandler) {
             this.name = name;
-            this.password = password;
+            this.function = function;
             this. resultHandler = resultHandler;
         }
 
@@ -111,7 +121,7 @@ public class LoginBeginActivity extends Activity {
         public void run() {
             URL request = null;
             try {
-                request = new URL("http://android.getenv.net/?mod=User&fun=userNameAvailable&name=" + name);
+                request = new URL("http://android.getenv.net/?mod=User&fun=" + function + name);
                 HttpURLConnection sendInfo = (HttpURLConnection) request.openConnection();
                 BufferedReader getData = new BufferedReader(new InputStreamReader(sendInfo.getInputStream()));
 
@@ -122,6 +132,20 @@ public class LoginBeginActivity extends Activity {
                     responseData.append(tmp);
                 }
                 getData.close();
+
+                // ToDo TEST
+                String headerName = null;
+                Object cookieValue;
+                for (int i =1; (headerName = sendInfo.getHeaderFieldKey(i)) != null; i++)
+                {
+
+                    if(headerName.equals("Set-Cookie"))
+                    {
+                        cookieValue = sendInfo.getHeaderField(i);
+                        cookieValue.getClass();
+
+                    }
+                }
 
                 // Set up message for handler with the result-data
                 Message responseOfWeb = resultHandler.obtainMessage();
@@ -136,6 +160,8 @@ public class LoginBeginActivity extends Activity {
         }
     }
 
+    String pass;
+    String infoFromServer;
     //sets up new handler
     private final Handler LoginHandler = new Handler() {
 
@@ -143,15 +169,28 @@ public class LoginBeginActivity extends Activity {
             //gets the message with info from handler (bundle) if userName is already used
             Bundle data = responseServerMessage.getData();
 
-            // Get Info from message
-            String infoFromServer = data.getString("Login");
             try {
-                if (Integer.parseInt(infoFromServer) == 0) {
+                // Get Info from message
+                infoFromServer = data.getString("Login");
+                try {
+                    if (Integer.parseInt(infoFromServer) == 0) {
                     Toast.makeText(LoginBeginActivity.this, R.string.no_user, Toast.LENGTH_LONG).show();
-                    //ToDo Passwort mit eingegebenem vergleichen
+                } else {
+                    new NetworkController(userName, "getPass&name=", LoginHandler).start();
+                    loginOk = true;
+                }} catch (Exception e) {
+                    JSONObject passWrapped = new JSONObject(infoFromServer);
+                    pass = passWrapped.getString("UPASS");
                 }
-                loginOk = true;
+
+                // Disable back button
+                if(loginOk) {
+                    if (!pass.equals(userPassword)) {
+                        Toast.makeText(LoginBeginActivity.this, R.string.wrong_password, Toast.LENGTH_LONG).show();
+                    }
+                }
             } catch (Exception e) {}
+
             }
     };
 }
