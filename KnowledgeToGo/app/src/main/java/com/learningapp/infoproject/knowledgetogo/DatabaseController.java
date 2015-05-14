@@ -32,6 +32,13 @@ public class DatabaseController extends Thread {
         this.requestType = requestType;
     }
 
+    public DatabaseController(int requestType, String url, ArrayList<String> string, ArrayList<Integer> integer){
+        this.url = url;
+        this.content = string;
+        this.type = integer;
+        this.requestType = requestType;
+    }
+
     @Override
     public void run() {
         URL request;
@@ -63,6 +70,20 @@ public class DatabaseController extends Thread {
                             content.add(jO.getString("QContent"));
                             type.add(jO.getInt("QType"));
                             id.add(jO.getInt("QID"));
+                        }
+                        break;
+                    case DBVars.REQUEST_BEST_USER:
+                        for (int i = 0; i < download.length(); i++) {
+                            jO = download.getJSONObject(i);
+                            content.add(jO.getString("UName"));
+                            type.add(jO.getInt("SScore"));
+                        }
+                        break;
+                    case DBVars.REQUEST_LECTURES_DOWNLOAD:
+                        for (int i = 0; i < download.length(); i++) {
+                            jO = download.getJSONObject(i);
+                            content.add(jO.getString("LName"));
+                            type.add(jO.getInt("LID"));
                         }
                         break;
                 }

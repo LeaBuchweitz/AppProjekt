@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 
 /**
  * Created by Fabian on 02.05.15.
@@ -22,6 +23,8 @@ public class Pig {
     private static final int mWalkStartFrame = 0;
     private static final int mJumpingFrame = 4; // Needs to lie outside of the walk cycle!
     private static final int mJumpStartFrame = 2; // Needs to lie within the walk cycle!
+    private static final int mFailFrame = 0;
+    private static final int mFailFrameTwo = 1;
 
     private long mFrameTicker;    // the time of the last frame update
     private int mFramePeriod;    // milliseconds between each frame (1000/fps)
@@ -36,12 +39,17 @@ public class Pig {
 
     // For the jump cycle
     private boolean mJumping;
-    private double mJumpDuration;
-    private double mJumpBegin;
-    private double mJumpTime;
-    private double mJumpAt;
     private static final double mJumpHeight = 50;
     private static final int mJumpRotation = 20;
+
+    // For the fail cycle
+    private boolean mFailing;
+
+
+    private double mActionDuration;
+    private double mActionBegin;
+    private double mActionTime;
+    private double mActionAt;
 
     public Pig(Resources res, int mCanvasHeight, int mCanvasWidth) {
 
@@ -62,31 +70,48 @@ public class Pig {
         mFramePeriod = 1000 / PigThread.FPS;
         mFrameTicker = 0l;
 
+        mFailing = false;
         mJumping = false;
-        mJumpTime = 0;
+        mActionTime = 0;
 
     }
 
     public void update(long now) {
 
         // Begins Jump - for a fluent animation wait for the starting picture
-        if (mJumping && mCurrentFrame == mJumpStartFrame && now > mJumpAt) {
+        if (mJumping && mCurrentFrame == mJumpStartFrame && now > mActionAt) {
             mCurrentFrame = mJumpingFrame;
-            mJumpBegin = now;
-            mJumpTime = 0;
+            mActionBegin = now;
         }
         // During Jump
-        else if (mJumping && mCurrentFrame == mJumpingFrame && mJumpTime < mJumpDuration) {
-            mJumpTime = now - mJumpBegin;
-            mWalkYCurrent = mWalkY - calculateJumpParabola(mJumpTime, mJumpDuration, mJumpHeight);
-            mRotation = (float) ((mJumpDuration - mJumpTime) / mJumpDuration * mJumpRotation - mJumpRotation / 2);
+        else if (mJumping && mCurrentFrame == mJumpingFrame && mActionTime < mActionDuration) {
+            mActionTime = now - mActionBegin;
+            mWalkYCurrent = mWalkY - calculateJumpParabola(mActionTime, mActionDuration, mJumpHeight);
+            mRotation = (float) ((mActionDuration - mActionTime) / mActionDuration * mJumpRotation - mJumpRotation / 2);
         }
         // Jump ends
-        else if (mJumping && mCurrentFrame == mJumpingFrame && mJumpTime >= mJumpDuration) {
+        else if (mJumping && mCurrentFrame == mJumpingFrame && mActionTime >= mActionDuration) {
             mJumping = false;
             mRotation = 0;
             mCurrentFrame = mWalkStartFrame;
         }
+
+        // Begins Fail
+        else if (mFailing && now > mActionAt && mActionTime <= mActionDuration / 3) {
+            mActionTime = now - mActionAt;
+            mCurrentFrame = mFailFrame;
+        }
+        // Failing - Pig lies
+        else if (mFailing && mActionTime > mActionDuration / 3 && mActionTime < mActionDuration) {
+            mActionTime = now - mActionAt;
+            mCurrentFrame = mFailFrameTwo;
+        }
+        // Failing Ends
+        else if (mFailing && mActionTime >= mActionDuration) {
+            mFailing = false;
+            mCurrentFrame = mWalkStartFrame;
+        }
+
         // Walking
         else {
             if (now > mFrameTicker + mFramePeriod) {
@@ -120,10 +145,18 @@ public class Pig {
      */
     public void jump(double jumpDuration, double delay, double now) {
         if (!mJumping) {
-            mJumpDuration = jumpDuration;
-            mJumpAt = now + delay;
             mJumping = true;
+            mActionDuration = jumpDuration;
+            mActionAt = now + delay;
+            mActionTime = 0;
         }
+    }
+
+    public void fail(double delay, double now){
+        mFailing = true;
+        mActionDuration = 1000;
+        mActionAt = now + delay;
+        mActionTime = 0;
     }
 
     /**
