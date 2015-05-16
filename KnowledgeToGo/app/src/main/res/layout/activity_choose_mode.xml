@@ -23,7 +23,8 @@
         android:layout_alignStart="@+id/exam"
         android:layout_alignRight="@+id/exam"
         android:layout_alignEnd="@+id/exam"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:background="@layout/button_choose_mode_layout"/>
 
         <Button
         android:layout_width="wrap_content"
@@ -36,7 +37,8 @@
         android:layout_alignStart="@+id/add_question"
         android:layout_alignRight="@+id/add_question"
         android:layout_alignEnd="@+id/add_question"
-            android:textStyle="bold" />
+        android:textStyle="bold"
+        android:background="@layout/button_choose_mode_layout" />
 
     <Button
         android:layout_width="wrap_content"
@@ -46,7 +48,8 @@
         android:layout_marginTop="59dp"
         android:layout_below="@+id/exam"
         android:layout_centerHorizontal="true"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:background="@layout/button_choose_mode_layout"/>
 
     <ListView
         android:layout_width="wrap_content"
@@ -57,7 +60,9 @@
         android:layout_alignStart="@+id/add_question"
         android:layout_alignRight="@+id/add_question"
         android:layout_alignEnd="@+id/add_question"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:background="#ffe2e2e2"
+        android:textAlignment="center" />
 
     <ImageButton
         android:layout_width="45dp"
@@ -77,6 +82,9 @@
         android:id="@+id/lecture_menu"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:padding="10dp" />
 
 </android.support.v4.widget.DrawerLayout>

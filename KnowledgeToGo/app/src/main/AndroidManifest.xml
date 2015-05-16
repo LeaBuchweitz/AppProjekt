@@ -47,6 +47,10 @@
             android:name=".Add_Normal_Question_Activity"
             android:label="@string/title_activity_add__normal__question_" >
         </activity>
+        <activity
+            android:name=".ReadQuestionActivity"
+            android:label="@string/title_activity_read_question" >
+        </activity>
     </application>
 
 </manifest>

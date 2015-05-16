@@ -5,4 +5,7 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/add"
-    android:padding="5dp" />
+    android:padding="10dp"
+    android:textColor="@android:color/black"
+    android:gravity="center"
+    android:textStyle="bold" />

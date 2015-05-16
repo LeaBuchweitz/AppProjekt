@@ -29,6 +29,7 @@ public class ChooseModeActivity extends Activity {
     private ListView addList;
     private DrawerLayout drawer;
     private ListView lecture_menu;
+    protected int lectureID;
 
 
     @Override
@@ -39,6 +40,7 @@ public class ChooseModeActivity extends Activity {
         // Import layout feature
         drawer = (DrawerLayout) findViewById(R.id.drawer);
         Button addQuestion = (Button) findViewById(R.id.add_question);
+        Button read = (Button) findViewById(R.id.learn);
         addList = (ListView) findViewById(R.id.add_list);
         Button examMode = (Button) findViewById(R.id.exam);
         ImageButton chooseLecture = (ImageButton) findViewById(R.id.choose_lecture);
@@ -50,6 +52,15 @@ public class ChooseModeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 drawer.openDrawer(Gravity.START);
+            }
+        });
+
+        // Mode just to read all possible questions
+        read.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent readQquestion = new Intent(ChooseModeActivity.this, ReadQuestionActivity.class);
+                startActivity(readQquestion);
             }
         });
 
@@ -106,9 +117,9 @@ public class ChooseModeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(addList.getVisibility() == View.GONE) {
-                    addList.setVisibility(View.INVISIBLE);
-                } else {
                     addList.setVisibility(View.VISIBLE);
+                } else {
+                    addList.setVisibility(View.GONE);
                 }
             }
         });
@@ -141,27 +152,5 @@ public class ChooseModeActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_choose_mode, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

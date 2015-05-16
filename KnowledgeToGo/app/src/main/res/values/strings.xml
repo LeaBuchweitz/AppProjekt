@@ -43,5 +43,9 @@
     <string name="button_send">Check</string>
     <string name="button_next">Nächste</string>
     <string name="text_gap">Leerstelle</string>
+    <string name="title_activity_read_question">ReadQuestionActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

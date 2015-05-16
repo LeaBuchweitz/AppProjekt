@@ -68,7 +68,9 @@
         android:layout_below="@+id/enterPassword"
         android:layout_centerHorizontal="true"
         android:textColor="#ff000000"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:background="@layout/button_layout"
+        android:layout_marginTop="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
