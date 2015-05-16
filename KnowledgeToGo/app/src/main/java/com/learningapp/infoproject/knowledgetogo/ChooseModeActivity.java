@@ -31,6 +31,8 @@ public class ChooseModeActivity extends Activity {
     private ListView lecture_menu;
     protected int lectureID;
 
+    private int userID = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +67,16 @@ public class ChooseModeActivity extends Activity {
         });
 
         // Set Drawer-Layout to choose different lectures
-        final ArrayList<String> lectures = new ArrayList<String>();
-        lectures.add("Hinzufügen...");
+        final ArrayList<String> lectures = new ArrayList<>();
+        final ArrayList<Integer> lectureID = new ArrayList<>();
+
         lectures.add("Logout");
+        lectures.add("Hinzufügen...");
+
+        // Make download request for lectures. The result is saved into the given ArrayLists
+        new DatabaseController(DBVars.REQUEST_LECTURES_DOWNLOAD,
+                "http://android.getenv.net/?mod=User&fun=getLectures&uid="+Integer.toString(userID),lectures, lectureID).start();
+
         lecture_menu.setAdapter(new ArrayAdapter<String>(this, R.layout.one_lecture_line, lectures));
 
         // Add ClickListener to enter a special lecture

@@ -25,6 +25,7 @@ public class QuestionModePigActivity extends Activity {
     private String downloadedText;
     private int questionCounter;
     private int score;
+    private int lifes;
 
     // Indicates which mode: true - shows the question, false - shows the answer
     private boolean modeIsSend;
@@ -40,6 +41,7 @@ public class QuestionModePigActivity extends Activity {
         questionType = new ArrayList<>();
         questionID = new ArrayList<>();
 
+        // Make download request for questions. The result is saved into the given ArrayLists
         new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
                 "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid="+Integer.toString(lectureID),
                 questionContent, questionType, questionID).start();
@@ -47,6 +49,7 @@ public class QuestionModePigActivity extends Activity {
         setContentView(R.layout.activity_question_mode_pig);
 
         score = 0;
+        lifes = 3;
 
         layout = (FlowLayout) findViewById(R.id.flow_layout);
         animation = (SurfaceAnimation) findViewById(R.id.surfaceDrawing);
@@ -55,10 +58,17 @@ public class QuestionModePigActivity extends Activity {
         startTask();
     }
 
+    /**
+     * Starts first activity
+     */
     private void startTask() {
         modeIsSend = false;
     }
 
+    /**
+     * Starts next activity
+     * @param view context
+     */
     public void nextTask(View view){
         if (questionCounter < questionContent.size()) {
             if (modeIsSend) {
@@ -83,8 +93,11 @@ public class QuestionModePigActivity extends Activity {
         layout.removeAllViews();
         downloadedText = questionContent.get(questionCounter);
         switch(questionType.get(questionCounter)) {
-            case 1:
+            case DBVars.QUESTION_TYPE_GAPTEXT:
                 editTextList = Parser.createGapText(downloadedText, layout, this);
+                break;
+            case DBVars.QUESTION_TYPE_NOTES:
+
                 break;
 
         }
@@ -101,13 +114,26 @@ public class QuestionModePigActivity extends Activity {
 
         layout.removeAllViews();
 
-        score += Parser.createSolve(downloadedText, entries, layout, this) * 10;
+        int answerScore = Parser.createSolve(downloadedText, entries, layout, this);
+        score += answerScore * 10;
         animation.getThread().setScore(score);
+
+        if (answerScore == 0){
+            if (lifes == 0){
+                lifes--;
+                endTask();
+                return;
+            }
+            animation.getThread().pigFail();
+            lifes--;
+        }
 
         questionCounter++;
     }
 
-
+    /**
+     * When all the answering is done.
+     */
     private void endTask() {
         //...
     }
@@ -122,9 +148,6 @@ public class QuestionModePigActivity extends Activity {
 
     public void jump(View view){
         animation.getThread().pigJump(1000,1000);
-        for (int i = 0; i < questionContent.size(); i++) {
-            Log.i("", questionContent.get(i));
-        }
     }
 
 }

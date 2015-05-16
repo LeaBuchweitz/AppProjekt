@@ -10,6 +10,7 @@ public final class DBVars {
     public static final int QUESTION_TYPE_NOTES = 2;
 
     public static final int REQUEST_QUESTION_DOWNLOAD = 1;
-    //public static final int REQUEST_ = 2;
+    public static final int REQUEST_BEST_USER = 2;
+    public static final int REQUEST_LECTURES_DOWNLOAD = 3;
 
 }

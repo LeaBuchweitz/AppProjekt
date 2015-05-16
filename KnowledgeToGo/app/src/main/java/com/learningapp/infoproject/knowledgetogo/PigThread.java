@@ -47,6 +47,9 @@ class PigThread extends Thread {
     /* Resources */
     private Resources mResources;
 
+    // Heart
+    private Drawable mHeart;
+
     // Image
     private Drawable image;
     private int mImageX;
@@ -61,7 +64,7 @@ class PigThread extends Thread {
     // Walkcycle
     private Pig pig;
 
-
+    private int mLifes;
     private int mScore;
 
     public PigThread(SurfaceHolder surfaceHolder, Context context, Handler handler) {
@@ -72,9 +75,10 @@ class PigThread extends Thread {
         mContext = context;
 
         mResources = context.getResources();
-        image = mContext.getResources().getDrawable(R.drawable.logo);
+        image = mResources.getDrawable(R.drawable.logo);
         mBackgroundImage = BitmapFactory.decodeResource(mResources,
-                R.drawable.boom);
+                R.drawable.boom2);
+        mHeart = mResources.getDrawable(R.drawable.heart);
     }
 
 
@@ -96,6 +100,7 @@ class PigThread extends Thread {
 
             // Score
             mScore = 0;
+            mLifes = 3;
 
             mBlack = new TextPaint();
             mBlack.setColor(Color.BLACK);
@@ -196,7 +201,12 @@ class PigThread extends Thread {
 
         pig.draw(canvas);
 
-        canvas.drawText("Score: "+Integer.toString(mScore),10,30,mBlack);
+        canvas.drawText("Score: "+Integer.toString(mScore),10,80,mBlack);
+
+        for (int i = 0; i < mLifes; i++) {
+            mHeart.setBounds(10 + i * 40, 20, 40 + i * 40, 50 );
+            mHeart.draw(canvas);
+        }
     }
 
     /**
@@ -223,7 +233,7 @@ class PigThread extends Thread {
             mCanvasHeight = height;
 
             // don't forget to resize the background image
-	        mBackgroundImageWidth = mBackgroundImage.getWidth() * mCanvasHeight / mBackgroundImage.getHeight();
+	        mBackgroundImageWidth = Math.round(mBackgroundImage.getWidth() * mCanvasHeight / mBackgroundImage.getHeight());
             mBackgroundImage = Bitmap.createScaledBitmap(mBackgroundImage, mBackgroundImageWidth, mCanvasHeight, true);
     	}
     }
@@ -236,17 +246,17 @@ class PigThread extends Thread {
         mScore = score;
     }
 
-    public int getScore(){
-        return mScore;
-    }
-
-
     /**
      * Initiates Pig-Jump with
      * @param duration in ms
      */
     public void pigJump(double duration, double delay){
         pig.jump(duration,delay,System.currentTimeMillis());
+    }
+
+    public void pigFail(){
+        pig.fail(2000, System.currentTimeMillis());
+        mLifes--;
     }
 
 }
