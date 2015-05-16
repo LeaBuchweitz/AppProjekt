@@ -18,13 +18,13 @@ public class Pig {
     private Rect mDestinationRect;
 
     private int mCurrentFrame;    // the current frame
-    private static final int mFrameCount = 4; // Count of walking pictures, the first pictures
-    private static final int mAdditionalFrames = 1;
-    private static final int mWalkStartFrame = 0;
-    private static final int mJumpingFrame = 4; // Needs to lie outside of the walk cycle!
-    private static final int mJumpStartFrame = 2; // Needs to lie within the walk cycle!
-    private static final int mFailFrame = 0;
-    private static final int mFailFrameTwo = 1;
+    private static final int mFrameCount = 5; // Count of walking pictures, the first pictures
+    private static final int mAdditionalFrames = 3;
+    private static final int mWalkStartFrame = 3;
+    private static final int mJumpingFrame = 5; // Needs to lie outside of the walk cycle!
+    private static final int mJumpStartFrame = 0; // Needs to lie within the walk cycle!
+    private static final int mFailFrame = 6;
+    private static final int mFailFrameTwo = 7;
 
     private long mFrameTicker;    // the time of the last frame update
     private int mFramePeriod;    // milliseconds between each frame (1000/fps)
@@ -53,7 +53,7 @@ public class Pig {
 
     public Pig(Resources res, int mCanvasHeight, int mCanvasWidth) {
 
-        mWalk = BitmapFactory.decodeResource(res, R.drawable.walk);
+        mWalk = BitmapFactory.decodeResource(res, R.drawable.schwein);
 
         mCurrentFrame = mWalkStartFrame;
 
