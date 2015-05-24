@@ -48,6 +48,8 @@ public class DatabaseController extends Thread {
             request = new URL(url);
 
             HttpURLConnection sendInfo = (HttpURLConnection) request.openConnection();
+            sendInfo.setRequestProperty("Cookie", DBVars.SESSION_COOKIE);
+            sendInfo.connect();
             getData = new BufferedReader(new InputStreamReader(sendInfo.getInputStream()));
 
             // Put 'endless' line of data into a readable portion

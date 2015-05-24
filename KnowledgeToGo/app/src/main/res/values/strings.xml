@@ -45,7 +45,8 @@
     <string name="text_gap">Leerstelle</string>
     <string name="title_activity_read_question">ReadQuestionActivity</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="your_distance">Deine Distanz</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_show_score">Geschafft!</string>
 
 </resources>

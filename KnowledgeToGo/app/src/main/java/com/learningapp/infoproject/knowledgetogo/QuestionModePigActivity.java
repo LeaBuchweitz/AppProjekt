@@ -1,11 +1,14 @@
 package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import org.apmem.tools.layouts.FlowLayout;
 import java.util.ArrayList;
 
@@ -136,6 +139,15 @@ public class QuestionModePigActivity extends Activity {
      */
     private void endTask() {
         //...
+        if(questionCounter == questionContent.size()) {
+            Intent showCurrentScore = new Intent(QuestionModePigActivity.this, ShowScoreActivity.class);
+            Bundle extras = new Bundle();
+            extras.putInt("Reached-Score", score);
+            extras.putInt("Number-Questions", questionCounter);
+            showCurrentScore.putExtras(extras);
+            QuestionModePigActivity.this.startActivity(showCurrentScore);
+            QuestionModePigActivity.this.finish();
+        }
     }
 
     public void pauseAnimation(View view) {

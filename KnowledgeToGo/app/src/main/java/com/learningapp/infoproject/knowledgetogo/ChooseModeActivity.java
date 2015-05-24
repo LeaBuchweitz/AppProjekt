@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -86,28 +87,40 @@ public class ChooseModeActivity extends Activity {
                 String selectedLecture = (String) lecture_menu.getItemAtPosition(position);
 
                 // ToDo load questions of this lecture
-                if(selectedLecture.equals("Hinzufügen...")) {
-                    final EditText enterLecture = new EditText(ChooseModeActivity.this);
-                    AlertDialog.Builder newLecture = new AlertDialog.Builder(ChooseModeActivity.this);
-                    newLecture.setMessage("Gib den Namen der Vorlesung ein!");
-                    newLecture.setView(enterLecture);
-                    newLecture.setCancelable(true);
-                    newLecture.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String addThisLecture = enterLecture.getText().toString();
-                            //ToDo give new lecture to server and save it
-                        }
-                    });
-                    newLecture.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    newLecture.create().show();
-                } else if (selectedLecture.equals("Logout")) {
-                    // ToDo logout
+                switch (position) {
+                    case 0: {
+                        // Logout, return to Login-page and delete session cookie
+                        DBVars.SESSION_COOKIE = null;
+                        Toast.makeText(ChooseModeActivity.this, "Cookie weg "+ DBVars.SESSION_COOKIE, Toast.LENGTH_LONG).show();
+                        Intent backLogin = new Intent(ChooseModeActivity.this, LoginBeginActivity.class);
+                        startActivity(backLogin);
+                        finish();
+                        break;
+                    }
+                    case 1: {
+                        // Add a lecture to the slide menu
+                        final EditText enterLecture = new EditText(ChooseModeActivity.this);
+                        AlertDialog.Builder newLecture = new AlertDialog.Builder(ChooseModeActivity.this);
+                        newLecture.setMessage("Gib den Namen der Vorlesung ein!");
+                        newLecture.setView(enterLecture);
+                        newLecture.setCancelable(true);
+                        newLecture.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String addThisLecture = enterLecture.getText().toString();
+                                //ToDo give new lecture to server and save it
+                            }
+                        });
+                        newLecture.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        newLecture.create().show();
+                        break;
+                    }
+                    default: {} //ToDo alle ID's für Vorlesungen zuordnen
                 }
             }
         });

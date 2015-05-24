@@ -13,4 +13,6 @@ public final class DBVars {
     public static final int REQUEST_BEST_USER = 2;
     public static final int REQUEST_LECTURES_DOWNLOAD = 3;
 
+    public static String SESSION_COOKIE = null;
+
 }
