@@ -1,6 +1,7 @@
 package com.learningapp.infoproject.knowledgetogo;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +37,11 @@ public class DatabaseController extends Thread {
         this.url = url;
         this.content = string;
         this.type = integer;
+        this.requestType = requestType;
+    }
+
+    public DatabaseController (int requestType, String url) {
+        this.url = url;
         this.requestType = requestType;
     }
 
@@ -91,7 +97,7 @@ public class DatabaseController extends Thread {
                 }
 
             } catch (JSONException e) {
-                Log.i("a",e.toString());
+                Log.i("a", e.toString());
                 e.printStackTrace();
             }
 

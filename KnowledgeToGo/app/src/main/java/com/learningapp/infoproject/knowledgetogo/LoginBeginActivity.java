@@ -1,10 +1,15 @@
 package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.renderscript.Script;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,8 +70,20 @@ public class LoginBeginActivity extends Activity {
                 userName = name.getText().toString();
                 userPassword = password.getText().toString();
 
-                // Creates NetworkController and Handler to send request to server
-                new NetworkController(userName, "userNameAvailable&name=", LoginHandler).start();
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo internetOk = connectivityManager.getActiveNetworkInfo();
+                if(internetOk != null) {
+                    // Creates NetworkController and Handler to send request to server
+                    new NetworkController(userName, "userNameAvailable&name=", LoginHandler).start();
+                } else {
+                    AlertDialog.Builder noInternet = new AlertDialog.Builder(LoginBeginActivity.this);
+                    noInternet.setTitle(R.string.no_internet);
+                    noInternet.setMessage(R.string.no_internet2);
+                    noInternet.setCancelable(true);
+                    noInternet.create().show();
+                    password.getText().clear();
+                    name.getText().clear();
+                }
             }
         });
 

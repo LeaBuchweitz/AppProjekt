@@ -107,8 +107,8 @@ public class ChooseModeActivity extends Activity {
                         newLecture.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String addThisLecture = enterLecture.getText().toString();
-                                //ToDo give new lecture to server and save it
+                        String addThisLecture = enterLecture.getText().toString();
+                                // ToDo Einfügen von Vorlesungen
                             }
                         });
                         newLecture.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {

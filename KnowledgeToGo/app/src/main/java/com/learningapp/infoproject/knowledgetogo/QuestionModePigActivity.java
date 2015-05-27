@@ -122,13 +122,15 @@ public class QuestionModePigActivity extends Activity {
         animation.getThread().setScore(score);
 
         if (answerScore == 0){
+            lifes--;
+            animation.getThread().pigFail();
             if (lifes == 0){
-                lifes--;
+                //lifes--;
                 endTask();
                 return;
             }
-            animation.getThread().pigFail();
-            lifes--;
+            //animation.getThread().pigFail();
+            //lifes--;
         }
 
         questionCounter++;
@@ -138,8 +140,8 @@ public class QuestionModePigActivity extends Activity {
      * When all the answering is done.
      */
     private void endTask() {
-        //...
-        if(questionCounter == questionContent.size()) {
+        // Go on to Score-Activity if no life or all questions answered
+        if(questionCounter == questionContent.size() || lifes == 0) {
             Intent showCurrentScore = new Intent(QuestionModePigActivity.this, ShowScoreActivity.class);
             Bundle extras = new Bundle();
             extras.putInt("Reached-Score", score);

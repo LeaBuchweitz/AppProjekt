@@ -12,8 +12,8 @@ import org.w3c.dom.Text;
 
 public class ShowScoreActivity extends Activity {
 
-    private int score;
-    private int numberQuestions;
+    private float score;
+    private float numberQuestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,23 +31,30 @@ public class ShowScoreActivity extends Activity {
             score = reachedScore.getInt("Reached-Score");
             numberQuestions = reachedScore.getInt("Number-Questions");
         }
-        // show correct pig-picture
-        if(score == (numberQuestions * 10)) {
-            scorePig.setImageResource(R.drawable.schwein_posing);
-        } else if(score <= 20) {
-            scorePig.setImageResource(R.drawable.schlapp_schwein);
-        }
+
+        float tmp = score/10;
 
         // Enter the distance
-        runDistance.setText(numberQuestions+" km");
-        int tmp = score/10;
-        if(tmp >= (numberQuestions/4)*3) {
-            encouragement.setText("Herzlichen Glückwunsch! Du bist top in Form!");
-        } if(tmp >= numberQuestions/2 && tmp < (numberQuestions/4)*3) {
-            encouragement.setText("Gut gemacht! Weiter so!");
-        } else {
-            encouragement.setText("Das war noch nichts! Du musst dringend üben!");
-        }
+        runDistance.setText(tmp +" km");
+        // If right answers are at least 1/2 of all questions available
+        if(tmp >= numberQuestions/2) {
+            // If right answers are at least 3/4 of all questions available
+            if(tmp > (numberQuestions/4)*3) {
+                encouragement.setText("Herzlichen Glückwunsch! Du bist top in Form!");
+                scorePig.setImageResource(R.drawable.schwein_posing);
+            } else {
+                encouragement.setText("Gut gemacht! Weiter so!");
+                scorePig.setImageResource(R.drawable.schwein_steht);
+            }} else {
+                // If right answers are less than 1/4 of all questions available
+                if (tmp > numberQuestions/4) {
+                    encouragement.setText("Übung macht den Meister! Bleib' dran!");
+                    scorePig.setImageResource(R.drawable.schwein_steht);
+                } else {
+                    encouragement.setText("Das war noch nichts! Du musst dringend üben!");
+                    scorePig.setImageResource(R.drawable.schlapp_schwein);
+                }
+            }
     }
 
 

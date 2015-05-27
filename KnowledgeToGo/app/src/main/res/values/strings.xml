@@ -11,6 +11,8 @@
     <string name="no_user">Du bist noch nicht registriert, bitte melde dich an!</string>
     <string name="wrong_password">Falsches Passwort!</string>
     <string name="title_activity_register">Registrieren</string>
+    <string name="no_internet">Keine Internet verfügbar!</string>
+    <string name="no_internet2">Bitte prüfe deine Netzwerkverbindung</string>
 
     <!-- Register to new Account -->
     <string name="enter_name">Gib deinen Benutzernamen ein</string>
