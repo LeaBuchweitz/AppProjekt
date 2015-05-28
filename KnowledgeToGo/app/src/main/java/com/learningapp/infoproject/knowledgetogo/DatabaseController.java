@@ -39,6 +39,11 @@ public class DatabaseController extends Thread {
         this.requestType = requestType;
     }
 
+    public DatabaseController(int requestType, String url){
+        this.url = url;
+        this.requestType = requestType;
+    }
+
     @Override
     public void run() {
         URL request;
@@ -89,7 +94,6 @@ public class DatabaseController extends Thread {
                 }
 
             } catch (JSONException e) {
-                Log.i("a",e.toString());
                 e.printStackTrace();
             }
 

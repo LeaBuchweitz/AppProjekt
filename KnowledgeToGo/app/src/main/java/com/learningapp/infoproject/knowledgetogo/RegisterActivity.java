@@ -129,15 +129,15 @@ public class RegisterActivity extends Activity {
     private class NetworkController extends Thread {
         private String userName;
         private Context context;
-        private Handler resultHandler;
+        private Handler registerHandler;
         private String password;
         private boolean insert;
 
-        public NetworkController(Context context, String userName, String password, Handler resultHandler, boolean insert) {
+        public NetworkController(Context context, String userName, String password, Handler registerHandler, boolean insert) {
             this.userName = userName;
             this.password =  password;
             this.context = context;
-            this.resultHandler = resultHandler;
+            this.registerHandler = registerHandler;
             this.insert = insert;
         }
 
@@ -164,7 +164,7 @@ public class RegisterActivity extends Activity {
                 getData.close();
 
                 // Set up message for handler with the result-data
-                Message responseOfWeb = resultHandler.obtainMessage();
+                Message responseOfWeb = registerHandler.obtainMessage();
                 Bundle resultBundle = new Bundle();
                 responseOfWeb.setData(resultBundle);
                 // Label response of the webpage with 'Available' or 'Insert'
@@ -173,7 +173,7 @@ public class RegisterActivity extends Activity {
                 } else {
                     resultBundle.putString("Insert", responseData.toString());
                 }
-                resultHandler.sendMessage(responseOfWeb);
+                registerHandler.sendMessage(responseOfWeb);
 
             } catch (IOException e) {
                 e.printStackTrace();

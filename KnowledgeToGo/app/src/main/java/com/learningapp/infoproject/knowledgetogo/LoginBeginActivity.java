@@ -174,11 +174,12 @@ public class LoginBeginActivity extends Activity {
                 infoFromServer = data.getString("Login");
                 try {
                     if (Integer.parseInt(infoFromServer) == 0) {
-                    Toast.makeText(LoginBeginActivity.this, R.string.no_user, Toast.LENGTH_LONG).show();
-                } else {
-                    new NetworkController(userName, "getPass&name=", LoginHandler).start();
-                    loginOk = true;
-                }} catch (Exception e) {
+                        Toast.makeText(LoginBeginActivity.this, R.string.no_user, Toast.LENGTH_LONG).show();
+                    } else {
+                        new NetworkController(userName, "getPass&name=", LoginHandler).start();
+                        loginOk = true;
+                    }
+                } catch (Exception e) {
                     JSONObject passWrapped = new JSONObject(infoFromServer);
                     pass = passWrapped.getString("UPASS");
                 }

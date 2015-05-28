@@ -113,8 +113,17 @@ public class QuestionModePigActivity extends Activity {
         }
 
         layout.removeAllViews();
+        int answerScore = 0;
 
-        int answerScore = Parser.createSolve(downloadedText, entries, layout, this);
+        switch(questionType.get(questionCounter)) {
+            case DBVars.QUESTION_TYPE_GAPTEXT:
+                answerScore = Parser.createSolve(downloadedText, entries, layout, this);
+                break;
+            case DBVars.QUESTION_TYPE_NOTES:
+
+                break;
+        }
+
         score += answerScore * 10;
         animation.getThread().setScore(score);
 

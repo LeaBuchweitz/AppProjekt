@@ -99,6 +99,7 @@ public class Parser {
         ArrayList<Boolean> isGap = getTextElementBooleans(s);
         ArrayList<Boolean> correct = correctAnswers(entries, getEntryElements(elements,isGap));
         int k = 0; // counter for gaps
+        int rightAnswers = 0; // Adds correct-answers-counter
 
         // Adds answer-texts
         for(int i = 0; i < elements.size(); i++){
@@ -108,20 +109,13 @@ public class Parser {
             if (isGap.get(i)) {
                 if (correct.get(k)) {
                     text.setTextColor(Color.GREEN);
+                    rightAnswers++;
                 } else {
                     text.setTextColor(Color.RED);
                 }
                 k++;
             }
             layout.addView(text);
-        }
-
-        // Adds correct-answers-counter
-        int rightAnswers = 0;
-        for (Boolean answer : correct){
-            if (answer){
-                rightAnswers++;
-            }
         }
 
         TextView text = new TextView(context);
