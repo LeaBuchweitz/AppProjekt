@@ -14,4 +14,6 @@ public final class DBVars {
     public static final int REQUEST_LECTURES_DOWNLOAD = 3;
     public static final int REQUEST_QUESTION_INSERT = 5;
 
+    public static String SESSION_COOKIE = null;
+
 }

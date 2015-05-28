@@ -1,11 +1,14 @@
 package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import org.apmem.tools.layouts.FlowLayout;
 import java.util.ArrayList;
 
@@ -128,13 +131,15 @@ public class QuestionModePigActivity extends Activity {
         animation.getThread().setScore(score);
 
         if (answerScore == 0){
+            lifes--;
+            animation.getThread().pigFail();
             if (lifes == 0){
-                lifes--;
+                //lifes--;
                 endTask();
                 return;
             }
-            animation.getThread().pigFail();
-            lifes--;
+            //animation.getThread().pigFail();
+            //lifes--;
         }
 
         questionCounter++;
@@ -144,7 +149,16 @@ public class QuestionModePigActivity extends Activity {
      * When all the answering is done.
      */
     private void endTask() {
-        //...
+        // Go on to Score-Activity if no life or all questions answered
+        if(questionCounter == questionContent.size() || lifes == 0) {
+            Intent showCurrentScore = new Intent(QuestionModePigActivity.this, ShowScoreActivity.class);
+            Bundle extras = new Bundle();
+            extras.putInt("Reached-Score", score);
+            extras.putInt("Number-Questions", questionCounter);
+            showCurrentScore.putExtras(extras);
+            QuestionModePigActivity.this.startActivity(showCurrentScore);
+            QuestionModePigActivity.this.finish();
+        }
     }
 
     public void pauseAnimation(View view) {
