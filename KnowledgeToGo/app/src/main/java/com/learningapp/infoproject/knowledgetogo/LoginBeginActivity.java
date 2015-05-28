@@ -194,13 +194,6 @@ public class LoginBeginActivity extends Activity {
                     // User-name is not available
                     if (Integer.parseInt(infoFromServer) == 0) {
                         Toast.makeText(LoginBeginActivity.this, R.string.no_user, Toast.LENGTH_LONG).show();
-<<<<<<< HEAD
-                    } else {
-                        new NetworkController(userName, "getPass&name=", LoginHandler).start();
-                        loginOk = true;
-                    }
-                } catch (Exception e) {
-=======
                         password.getText().clear();
                         name.getText().clear();
                     } else {
@@ -209,7 +202,6 @@ public class LoginBeginActivity extends Activity {
                     }
                 } catch (Exception e) {
                     // Get correct password from database
->>>>>>> 30dda0b984325919ec9ee4524735fe086a0453e0
                     JSONObject passWrapped = new JSONObject(infoFromServer);
                     pass = passWrapped.getString("UPass");
 
@@ -217,7 +209,7 @@ public class LoginBeginActivity extends Activity {
                     if (!pass.equals(userPassword)) {
                         Toast.makeText(LoginBeginActivity.this, R.string.wrong_password, Toast.LENGTH_LONG).show();
                         password.getText().clear();
-                    // If entered password is correct, go on to ChooseModeActivity
+                        // If entered password is correct, go on to ChooseModeActivity
                     } else {
                         // Keks
                         Toast.makeText(LoginBeginActivity.this, DBVars.SESSION_COOKIE , Toast.LENGTH_LONG).show();

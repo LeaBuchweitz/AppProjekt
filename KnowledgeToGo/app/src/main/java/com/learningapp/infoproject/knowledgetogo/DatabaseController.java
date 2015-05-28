@@ -40,11 +40,7 @@ public class DatabaseController extends Thread {
         this.requestType = requestType;
     }
 
-<<<<<<< HEAD
     public DatabaseController(int requestType, String url){
-=======
-    public DatabaseController (int requestType, String url) {
->>>>>>> 30dda0b984325919ec9ee4524735fe086a0453e0
         this.url = url;
         this.requestType = requestType;
     }
@@ -101,10 +97,7 @@ public class DatabaseController extends Thread {
                 }
 
             } catch (JSONException e) {
-<<<<<<< HEAD
-=======
-                Log.i("a", e.toString());
->>>>>>> 30dda0b984325919ec9ee4524735fe086a0453e0
+
                 e.printStackTrace();
             }
 
