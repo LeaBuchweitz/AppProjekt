@@ -19,7 +19,7 @@ class PigThread extends Thread {
     public static final double mSpeed = 100;
 
     /* FPS */
-    public static final int FPS = 6;
+    public static final int FPS = 8;
 
     /** Message handler used by thread to interact with TextView */
     private Handler mHandler;

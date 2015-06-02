@@ -209,7 +209,7 @@ public class LoginBeginActivity extends Activity {
                     if (!pass.equals(userPassword)) {
                         Toast.makeText(LoginBeginActivity.this, R.string.wrong_password, Toast.LENGTH_LONG).show();
                         password.getText().clear();
-                    // If entered password is correct, go on to ChooseModeActivity
+                        // If entered password is correct, go on to ChooseModeActivity
                     } else {
                         // Keks
                         Toast.makeText(LoginBeginActivity.this, DBVars.SESSION_COOKIE , Toast.LENGTH_LONG).show();

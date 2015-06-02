@@ -53,6 +53,7 @@
 
     <string name="your_distance">Deine Distanz</string>
     <string name="action_settings">Settings</string>
+    <string name="gapTextNotValid">\"Der Lückentext ist nicht korrekt! \\n Bitte überprüfe, ob du die Klammern { und } richtig gesetzt hast. \\n Jede Klammer muss geschlossen werden und es darf nur eine Klammer auf einmal offen sein.\"</string>
     <string name="title_activity_show_score">Geschafft!</string>
     <string name="title_activity_adapter_helper">AdapterHelperActivity</string>
 
