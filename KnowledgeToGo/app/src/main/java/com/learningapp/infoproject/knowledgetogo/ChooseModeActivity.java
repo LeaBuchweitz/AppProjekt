@@ -72,7 +72,7 @@ public class ChooseModeActivity extends Activity {
 
         adapter = new ArrayAdapter<String>(this, R.layout.one_lecture_line, lectures);
         updateDrawer(lectures);
-        //lecture_menu.setAdapter(adapter);
+        lecture_menu.setAdapter(adapter);
 
         // Add ClickListener to enter a special lecture
         lecture_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -106,6 +106,9 @@ public class ChooseModeActivity extends Activity {
                                         addThisLecture, userID).start();
                                 lectures.clear();
                                 updateDrawer(lectures);
+                                finish();
+                                Intent intent = new Intent(ChooseModeActivity.this, ChooseModeActivity.class);
+                                startActivity(intent);
 
                             }
                         });
@@ -216,6 +219,7 @@ public class ChooseModeActivity extends Activity {
                 "http://android.getenv.net/?mod=User&fun=getLectures&uid="+userID,lectures, lectureID);
         db.start();
         while (db.isAlive());
-        lecture_menu.setAdapter(adapter);
+        //lecture_menu.setAdapter(adapter);
+
     }
 }
