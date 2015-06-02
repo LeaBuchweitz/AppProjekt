@@ -10,59 +10,56 @@
         android:layout_alignTop="@+id/menu"
         android:layout_alignRight="@+id/menu"
         android:layout_alignEnd="@+id/menu"
-        android:background="#ffffffff">
+        android:background="@drawable/background">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/learn_mode"
         android:id="@+id/learn"
-        android:layout_marginTop="46dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/exam"
-        android:layout_alignStart="@+id/exam"
-        android:layout_alignRight="@+id/exam"
-        android:layout_alignEnd="@+id/exam"
         android:textStyle="bold"
-        android:background="@layout/button_choose_mode_layout"/>
+        android:background="@layout/button_choose_mode_layout"
+        android:layout_below="@+id/add_list"
+        android:layout_alignLeft="@+id/add_list"
+        android:layout_alignStart="@+id/add_list"
+        android:layout_alignRight="@+id/add_list"
+        android:layout_alignEnd="@+id/add_list" />
 
         <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/exam_mode"
         android:id="@+id/exam"
-        android:layout_marginTop="57dp"
-        android:layout_below="@+id/learn"
-        android:layout_alignLeft="@+id/add_question"
-        android:layout_alignStart="@+id/add_question"
-        android:layout_alignRight="@+id/add_question"
-        android:layout_alignEnd="@+id/add_question"
-        android:textStyle="bold"
-        android:background="@layout/button_choose_mode_layout" />
+            android:textStyle="bold"
+        android:background="@layout/button_choose_mode_layout"
+            android:layout_alignBottom="@+id/add_list"
+            android:layout_alignLeft="@+id/add_question"
+            android:layout_alignStart="@+id/add_question"
+            android:layout_marginBottom="32dp"
+            android:layout_alignRight="@+id/add_question"
+            android:layout_alignEnd="@+id/add_question" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_mode"
         android:id="@+id/add_question"
-        android:layout_marginTop="59dp"
-        android:layout_below="@+id/exam"
-        android:layout_centerHorizontal="true"
         android:textStyle="bold"
-        android:background="@layout/button_choose_mode_layout"/>
+        android:background="@layout/button_choose_mode_layout"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="122dp"
         android:id="@+id/add_list"
-        android:layout_below="@+id/add_question"
-        android:layout_alignLeft="@+id/add_question"
-        android:layout_alignStart="@+id/add_question"
-        android:layout_alignRight="@+id/add_question"
-        android:layout_alignEnd="@+id/add_question"
         android:visibility="invisible"
-        android:background="#ffe2e2e2"
-        android:textAlignment="center" />
+        android:background="#ff90e2af"
+        android:textAlignment="center"
+        android:layout_below="@+id/add_question"
+        android:layout_alignLeft="@+id/exam"
+        android:layout_alignRight="@+id/exam"
+        android:layout_alignEnd="@+id/exam" />
 
     <ImageButton
         android:layout_width="45dp"
@@ -85,6 +82,6 @@
         android:layout_alignParentStart="true"
         android:textStyle="bold"
         android:textSize="18dp"
-        android:padding="10dp" />
+        android:padding="10dp"/>
 
 </android.support.v4.widget.DrawerLayout>

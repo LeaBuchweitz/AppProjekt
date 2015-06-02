@@ -1,5 +1,8 @@
 package com.learningapp.infoproject.knowledgetogo;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,6 +27,8 @@ public class DatabaseController extends Thread {
     private ArrayList<Integer> type;
     private ArrayList<Integer> id;
     private int requestType;
+    private String lecture;
+    private int userID;
 
     public DatabaseController(int requestType, String url, ArrayList<String> content, ArrayList<Integer> type, ArrayList<Integer> id){
         this.url = url;
@@ -40,7 +45,21 @@ public class DatabaseController extends Thread {
         this.requestType = requestType;
     }
 
-    public DatabaseController(int requestType, String url){
+
+    public DatabaseController (int requestType, String url, String lecture, int userID) {
+        this.userID = userID;
+        this.lecture = lecture;
+        this.url = url;
+        this.requestType = requestType;
+    }
+
+    public DatabaseController (int requestType, String url, String lecture) {
+        this.lecture = lecture;
+        this.url = url;
+        this.requestType = requestType;
+    }
+
+    public DatabaseController (int requestType, String url) {
         this.url = url;
         this.requestType = requestType;
     }
@@ -94,10 +113,28 @@ public class DatabaseController extends Thread {
                             type.add(jO.getInt("LID"));
                         }
                         break;
+                    case DBVars.REQUEST_NEW_LECTURE:
+                        String success = null;
+                        for (int i = 0; i < download.length(); i++) {
+                            jO = download.getJSONObject(i);
+                            success = jO.getString("LName");
+                        }
+                        if(success.equals(lecture)) {
+                            Log.i("lecture", "Vorlesung hochgeladen");
+                        }
+                        break;
+                    case DBVars.REQUEST_ALREADY_THERE:
+                        if(new String (responseData).equals("[null]")) {
+                            new DatabaseController(DBVars.REQUEST_NEW_LECTURE,
+                                    "http://android.getenv.net/?mod=Lecture&fun=insertLecture&name="+lecture+"&uid="+userID, lecture).start();
+                        } else {
+                            Log.i("lecture", "Vorlesung gibts schon!");
+                        }
+                        break;
                 }
 
             } catch (JSONException e) {
-
+                Log.i("a", e.toString());
                 e.printStackTrace();
             }
 

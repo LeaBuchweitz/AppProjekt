@@ -5,14 +5,17 @@ package com.learningapp.infoproject.knowledgetogo;
  */
 public final class DBVars {
 
-    // Variables to coordinate the requests
+    // Variable for coordinating the requests
     public static final int QUESTION_TYPE_GAPTEXT = 1;
     public static final int QUESTION_TYPE_NOTES = 2;
 
     public static final int REQUEST_QUESTION_DOWNLOAD = 1;
     public static final int REQUEST_BEST_USER = 2;
     public static final int REQUEST_LECTURES_DOWNLOAD = 3;
-    public static final int REQUEST_QUESTION_INSERT = 5;
+    public static final int REQUEST_ALREADY_THERE = 4;
+    public static final int REQUEST_NEW_LECTURE = 5;
+
+    public static final int REQUEST_QUESTION_INSERT = 6;
 
     public static String SESSION_COOKIE = null;
 

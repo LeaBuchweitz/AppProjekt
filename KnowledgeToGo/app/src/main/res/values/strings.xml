@@ -21,6 +21,10 @@
     <string name="register">Registrieren</string>
     <string name="title_activity_choose_mode">Wähle eine Kategorie aus</string>
 
+    <!-- New Lecture -->
+    <string name="new_lecture">Vorlesung wurde erfolgreich eingetragen!</string>
+    <string name="already_exists">Die Vorlesung existiert schon!</string>
+
     <!-- Choose mode of learning  -->
     <string name="choose_mode">Wähle deinen Lernmodus</string>
     <string name="learn_mode">Lernen</string>
@@ -51,5 +55,8 @@
     <string name="action_settings">Settings</string>
     <string name="gapTextNotValid">\"Der Lückentext ist nicht korrekt! \\n Bitte überprüfe, ob du die Klammern { und } richtig gesetzt hast. \\n Jede Klammer muss geschlossen werden und es darf nur eine Klammer auf einmal offen sein.\"</string>
     <string name="title_activity_show_score">Geschafft!</string>
+    <string name="title_activity_adapter_helper">AdapterHelperActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>
