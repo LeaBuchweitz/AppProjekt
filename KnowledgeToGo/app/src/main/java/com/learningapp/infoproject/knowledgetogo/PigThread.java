@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 /**
@@ -16,7 +17,7 @@ import android.view.SurfaceHolder;
  */
 class PigThread extends Thread {
 
-    public static final double mSpeed = 100;
+    private double mSpeed;
 
     /* FPS */
     public static final int FPS = 8;
@@ -50,16 +51,19 @@ class PigThread extends Thread {
     // Heart
     private Drawable mHeart;
 
-    // Image
-    private Drawable image;
-    private int mImageX;
-    private int mImageY;
-
     // Background
     private Bitmap mBackgroundImage;
     private int mBackgroundImageX;
     private int mBackgroundImageY;
     private int mBackgroundImageWidth;
+
+    // Stone
+    private Bitmap mStone;
+    private int mStoneX;
+    private int mStoneY;
+    private boolean mFailing;
+    private boolean mJumping;
+    private double mActionBegin;
 
     // Walkcycle
     private Pig pig;
@@ -75,7 +79,7 @@ class PigThread extends Thread {
         mContext = context;
 
         mResources = context.getResources();
-        image = mResources.getDrawable(R.drawable.logo);
+        mStone = BitmapFactory.decodeResource(mResources, R.drawable.stone);
         mBackgroundImage = BitmapFactory.decodeResource(mResources,
                 R.drawable.boom2);
         mHeart = mResources.getDrawable(R.drawable.heart);
@@ -87,11 +91,14 @@ class PigThread extends Thread {
      */
     public void initialize() {
         synchronized (mSurfaceHolder) {
+            mSpeed = 100;
+
             mLastTime = System.currentTimeMillis() + 100;
             mIsRunning = true;
 
-            mImageX = mCanvasHeight/2;
-            mImageY = mCanvasWidth/2;
+            mStoneX = mCanvasWidth + 1;
+            mStoneY = 90;
+            mFailing = false;
 
             mBackgroundImageX = 0;
             mBackgroundImageY = 0;
@@ -171,8 +178,26 @@ class PigThread extends Thread {
 
         pig.update(now);
 
-        mImageX = mImageX < mCanvasWidth ? mImageX + (int) Math.round(mSpeed * elapsed) : - image.getIntrinsicWidth()/20;
-        mImageY = mImageY < mCanvasHeight ? mImageY + (int) Math.round(mSpeed * elapsed) : - image.getIntrinsicHeight()/20;
+        if (mFailing) {
+            if (mActionBegin + 2000 > now) {
+                mStoneX = mStoneX - (int) Math.round(mSpeed * 2.3 * elapsed);
+            } else if (mActionBegin + 3000 > now) {
+                mSpeed = 0;
+            } else {
+                mSpeed = 100;
+                mFailing = false;
+                mStoneX = mCanvasWidth + 1;
+            }
+        }
+
+        if (mJumping) {
+            if (mStoneX + 300 > 0) {
+                mStoneX = mStoneX - (int) Math.round(mSpeed * 3 * elapsed);
+            } else {
+                mJumping = false;
+                mStoneX = mCanvasWidth + 1;
+            }
+        }
 
         mBackgroundImageX = mBackgroundImageX + mBackgroundImageWidth > 0 ?
                 mBackgroundImageX - (int) Math.round(mSpeed * elapsed) :
@@ -196,8 +221,7 @@ class PigThread extends Thread {
                         mBackgroundImageX - mBackgroundImageWidth
                 , mBackgroundImageY, null);
 
-        image.setBounds(mImageX, mImageY, mImageX + image.getIntrinsicWidth() / 20, mImageY + image.getIntrinsicHeight() / 20);
-        image.draw(canvas);
+        canvas.drawBitmap(mStone, mStoneX, mStoneY, null);
 
         pig.draw(canvas);
 
@@ -232,6 +256,9 @@ class PigThread extends Thread {
             mCanvasWidth = width;
             mCanvasHeight = height;
 
+            // Sonst ist der Stein im Bild
+            mStoneX = mCanvasWidth + 1;
+
             // don't forget to resize the background image
 	        mBackgroundImageWidth = Math.round(mBackgroundImage.getWidth() * mCanvasHeight / mBackgroundImage.getHeight());
             mBackgroundImage = Bitmap.createScaledBitmap(mBackgroundImage, mBackgroundImageWidth, mCanvasHeight, true);
@@ -246,15 +273,15 @@ class PigThread extends Thread {
         mScore = score;
     }
 
-    /**
-     * Initiates Pig-Jump with
-     * @param duration in ms
-     */
-    public void pigJump(double duration, double delay){
-        pig.jump(duration,delay,System.currentTimeMillis());
+    public void pigJump(){
+        mJumping = true;
+        mActionBegin = System.currentTimeMillis();
+        pig.jump(2000,1000,System.currentTimeMillis());
     }
 
     public void pigFail(){
+        mFailing = true;
+        mActionBegin = System.currentTimeMillis();
         pig.fail(2000, System.currentTimeMillis());
         mLifes--;
     }

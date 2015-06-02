@@ -1,5 +1,7 @@
 package com.learningapp.infoproject.knowledgetogo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,10 +25,17 @@ public class Add_Normal_Question_Activity extends ActionBarActivity {
     private int numberAnswers;
     private boolean enoughAnswers;
 
+    private int lid;
+    private int uid;
+    private boolean uploaded;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add__normal__question_);
+
+        uploaded = false;
 
         // Add layout features
         Button sendToServer = (Button) findViewById(R.id.save_question);
@@ -65,7 +74,6 @@ public class Add_Normal_Question_Activity extends ActionBarActivity {
                             enoughAnswers = true;
                             break;
                         }
-
                     }
                 }
             }
@@ -100,55 +108,63 @@ public class Add_Normal_Question_Activity extends ActionBarActivity {
         sendToServer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get info from EditText
-                String addedQuestion = question.getText().toString();
-                String firstWord = firstAnswer.getText().toString();
-                String secondWord = secondAnswer.getText().toString();
-                String thirdWord = thirdAnswer.getText().toString();
-                String forthWord = forthAnswer.getText().toString();
-
-                // Get info of the question together into a bundle
-                Bundle question = new Bundle();
-                ArrayList<String> titleAnswers = new ArrayList<String>();
-                if(addedQuestion.equals("") | firstWord.equals("")) {
-                    Toast.makeText(Add_Normal_Question_Activity.this, R.string.no_question_answer, Toast.LENGTH_LONG).show();
-                    return;
-                } else {
-                    titleAnswers.add(addedQuestion);
-                    titleAnswers.add(firstWord);
-                } if(!secondWord.equals("")) {
-                    titleAnswers.add(secondWord);
-                } if(!thirdWord.equals("")) {
-                    titleAnswers.add(thirdWord);
-                } if(!forthWord.equals("")) {
-                    titleAnswers.add(forthWord);
-                }
-                question.putStringArrayList("Question", titleAnswers);
+               sendQuestion();
 
             }
         });
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add__normal__question_, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void sendQuestion(){
+        if (uploaded){
+            AlertDialog.Builder notValid = new AlertDialog.Builder(this);
+            notValid.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            notValid.setMessage(R.string.already_uploaded);
+            notValid.create().show();
+            return;
         }
 
-        return super.onOptionsItemSelected(item);
+        // Get info from EditText
+        String upload = "";
+        String q = question.getText().toString();
+        String a1 = firstAnswer.getText().toString();
+        String a2 = secondAnswer.getText().toString();
+        String a3 = thirdAnswer.getText().toString();
+        String a4 = forthAnswer.getText().toString();
+        switch (numberAnswers) {
+            case 4: if (!a4.equals("")) upload = "{" + forthAnswer.getText().toString() + "}" + upload;
+            case 3: if (!a3.equals("")) upload = "{" + thirdAnswer.getText().toString() + "}" + upload;
+            case 2: if (!a2.equals("")) upload = "{" + secondAnswer.getText().toString() + "}" + upload;
+            case 1: if (!a1.equals("")) upload = "{" + firstAnswer.getText().toString() + "}" + upload;
+                upload = q + upload;
+        }
+
+        // Upload evrythin'
+        if (!upload.equals(q) && Parser.checkHeading(q)) {
+            uploaded = true;
+            DatabaseController db = new DatabaseController(DBVars.REQUEST_QUESTION_INSERT,
+                    "http://android.getenv.net/?mod=Lecture&fun=insertQuestion&type=" +
+                            DBVars.QUESTION_TYPE_NOTES +
+                            "&lid=" + lid + "&uid=" + uid + "&content=" + upload);
+            db.start();
+            while(db.isAlive());
+            Toast.makeText(this, R.string.Upload_succesfull, Toast.LENGTH_LONG).show();
+        } else {
+            AlertDialog.Builder notValid = new AlertDialog.Builder(this);
+            notValid.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            notValid.setMessage(R.string.atLeastOneAnswer);
+            notValid.create().show();
+            return;
+        }
     }
+
 }

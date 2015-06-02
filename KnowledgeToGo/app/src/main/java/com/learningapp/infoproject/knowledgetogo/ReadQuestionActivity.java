@@ -1,49 +1,80 @@
 package com.learningapp.infoproject.knowledgetogo;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.apmem.tools.layouts.FlowLayout;
+
+import java.util.ArrayList;
 
 
-public class ReadQuestionActivity extends ActionBarActivity {
+public class ReadQuestionActivity extends Activity {
+
+    private FlowLayout layout;
+
+    private ArrayList<String> questionContent;
+    private ArrayList<Integer> questionType;
+    private ArrayList<Integer> questionID;
+
+    private int lectureID;
+
+    private String downloadedText;
+    private int questionCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        lectureID = 1;
+
+        questionCounter = 0;
+        questionContent = new ArrayList<>();
+        questionType = new ArrayList<>();
+        questionID = new ArrayList<>();
+
+        // Make download request for questions. The result is saved into the given ArrayLists
+        new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
+                "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid="+Integer.toString(lectureID),
+                questionContent, questionType, questionID).start();
+
         setContentView(R.layout.activity_read_question);
 
-        // get the questions of one lecture
-        try {
-            URL request = new URL("http://android.getenv.net/?mod=User&fun=getQuestions&lid="); // FEHLT NOCH LIU
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        layout = (FlowLayout) findViewById(R.id.flow_layout);
+
+        startTask();
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_read_question, menu);
-        return true;
+    public void startTask(){
+        while (questionContent.size() == 0);
+        createText();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void nextTask(View view){
+        if (questionCounter + 1 < questionContent.size()) {
+            questionCounter++;
+            createText();
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    public void backTask(View view){
+        if (questionCounter > 0) {
+            questionCounter--;
+            createText();
+        }
+    }
+
+    private void createText(){
+        layout.removeAllViews();
+        downloadedText = questionContent.get(questionCounter);
+        switch(questionType.get(questionCounter)) {
+            case DBVars.QUESTION_TYPE_GAPTEXT:
+                Parser.createText(downloadedText, layout, this);
+                break;
+            case DBVars.QUESTION_TYPE_NOTES:
+
+                break;
+        }
     }
 }
