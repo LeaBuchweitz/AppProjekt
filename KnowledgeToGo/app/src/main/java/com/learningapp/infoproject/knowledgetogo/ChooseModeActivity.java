@@ -29,8 +29,11 @@ public class ChooseModeActivity extends Activity {
     // In inner class needed objects
     private ListView addList;
     private DrawerLayout drawer;
+    private ArrayAdapter adapter;
     private ListView lecture_menu;
-    protected int lectureID;
+    //protected int lectureID;
+    private ArrayList<String> lectures = new ArrayList<String>();
+    private ArrayList<Integer> lectureID = new ArrayList<Integer>();
 
     private int userID = 1;
 
@@ -67,18 +70,9 @@ public class ChooseModeActivity extends Activity {
             }
         });
 
-        // Set Drawer-Layout to choose different lectures
-        final ArrayList<String> lectures = new ArrayList<>();
-        final ArrayList<Integer> lectureID = new ArrayList<>();
-
-        lectures.add("Logout");
-        lectures.add("Hinzufügen...");
-
-        // Make download request for lectures. The result is saved into the given ArrayLists
-        new DatabaseController(DBVars.REQUEST_LECTURES_DOWNLOAD,
-                "http://android.getenv.net/?mod=User&fun=getLectures&uid="+Integer.toString(userID),lectures, lectureID).start();
-
-        lecture_menu.setAdapter(new ArrayAdapter<String>(this, R.layout.one_lecture_line, lectures));
+        adapter = new ArrayAdapter<String>(this, R.layout.one_lecture_line, lectures);
+        updateDrawer(lectures);
+        //lecture_menu.setAdapter(adapter);
 
         // Add ClickListener to enter a special lecture
         lecture_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,7 +80,6 @@ public class ChooseModeActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedLecture = (String) lecture_menu.getItemAtPosition(position);
 
-                // ToDo load questions of this lecture
                 switch (position) {
                     case 0: {
                         // Logout, return to Login-page and delete session cookie
@@ -107,8 +100,13 @@ public class ChooseModeActivity extends Activity {
                         newLecture.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                        String addThisLecture = enterLecture.getText().toString();
-                                // ToDo Einfügen von Vorlesungen
+                                String addThisLecture = enterLecture.getText().toString();
+                                // Test if Lecture already exists
+                                new DatabaseController(DBVars.REQUEST_ALREADY_THERE, "http://android.getenv.net/?mod=Lecture&fun=checkLectureName&name="+addThisLecture,
+                                        addThisLecture, userID).start();
+                                lectures.clear();
+                                updateDrawer(lectures);
+
                             }
                         });
                         newLecture.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
@@ -119,6 +117,38 @@ public class ChooseModeActivity extends Activity {
                         });
                         newLecture.create().show();
                         break;
+                    }
+                    case 2: { // Show all available lectures
+                        ArrayList<String> allLectures = new ArrayList<String>();
+                        DatabaseController db = new DatabaseController(DBVars.REQUEST_LECTURES_DOWNLOAD,
+                                "http://android.getenv.net/?mod=Lecture&fun=getLectures",allLectures, lectureID);
+                        db.start();
+                        while (db.isAlive());
+                        AlertDialog.Builder builderSingle = new AlertDialog.Builder(ChooseModeActivity.this);
+                        builderSingle.setTitle("Wähle eine Vorlesung der du beitreten möchtest");
+                        final ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(ChooseModeActivity.this,
+                                android.R.layout.select_dialog_singlechoice);
+
+                        for(int i = 0; i < allLectures.size(); i++) {
+                            listAdapter.add(allLectures.get(i));
+                        }
+                        builderSingle.setCancelable(true);
+                        builderSingle.setNegativeButton("Abbrechen",
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        builderSingle.setAdapter(listAdapter, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String chosen = listAdapter.getItem(which);
+
+                            }
+                        });
+                        builderSingle.create().show();
                     }
                     default: {} //ToDo alle ID's für Vorlesungen zuordnen
                 }
@@ -138,10 +168,10 @@ public class ChooseModeActivity extends Activity {
         addQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(addList.getVisibility() == View.GONE) {
+                if(addList.getVisibility() == View.INVISIBLE) {
                     addList.setVisibility(View.VISIBLE);
                 } else {
-                    addList.setVisibility(View.GONE);
+                    addList.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -174,5 +204,18 @@ public class ChooseModeActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+    }
+
+    public void updateDrawer (ArrayList<String> lectures) {
+        lectures.add("Logout");
+        lectures.add("Hinzufügen...");
+        lectures.add("Suchen...");
+
+        // Make download request for lectures. The result is saved into the given ArrayLists
+        DatabaseController db = new DatabaseController(DBVars.REQUEST_LECTURES_DOWNLOAD,
+                "http://android.getenv.net/?mod=User&fun=getLectures&uid="+userID,lectures, lectureID);
+        db.start();
+        while (db.isAlive());
+        lecture_menu.setAdapter(adapter);
     }
 }
