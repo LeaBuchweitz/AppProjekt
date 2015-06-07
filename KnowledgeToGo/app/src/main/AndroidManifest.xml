@@ -56,10 +56,6 @@
             android:name=".ShowScoreActivity"
             android:label="@string/title_activity_show_score" >
         </activity>
-        <activity
-            android:name=".AdapterHelperActivity"
-            android:label="@string/title_activity_adapter_helper" >
-        </activity>
     </application>
 
 </manifest>
