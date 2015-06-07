@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -215,4 +216,9 @@ public class RegisterActivity extends Activity {
 
         }
     };
+
+    public void onBackPressed() {
+        Intent intent = new Intent(RegisterActivity.this, LoginBeginActivity.class);
+        startActivity(intent);
+    }
 }

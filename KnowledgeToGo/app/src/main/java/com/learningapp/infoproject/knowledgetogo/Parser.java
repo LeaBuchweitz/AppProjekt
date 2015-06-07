@@ -4,8 +4,10 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -82,6 +84,7 @@ public class Parser {
             text.setTextSize(EDIT_TEXT_SIZE);
             text.setWidth(width - 40);
             text.setPadding(20,TEXT_PADDING,TEXT_PADDING,10);
+            text.setTextColor(Color.BLACK);
             //text.setMinimumWidth(20);
             text.setId(i - start);
             editTextList.add(text);
@@ -127,9 +130,11 @@ public class Parser {
             if (!isGap.get(i)) {
                 TextView text = new TextView(context);
                 text.setText(elements.get(i));
+                text.setTextColor(Color.BLACK);
                 text.setHeight(TEXT_HEIGHT);
                 text.setTextSize(TEXT_VIEW_SIZE);
                 text.setPadding(TEXT_PADDING,TEXT_PADDING,TEXT_PADDING,TEXT_PADDING);
+                text.setTextColor(Color.BLACK);
                 layout.addView(text);
             } else {
                 EditText text = new EditText(context);
@@ -137,6 +142,7 @@ public class Parser {
                 text.setHeight(TEXT_HEIGHT);
                 text.setTextSize(EDIT_TEXT_SIZE);
                 text.setPadding(TEXT_PADDING,TEXT_PADDING,TEXT_PADDING,TEXT_PADDING);
+                text.setTextColor(Color.BLACK);
                 //text.setMinimumWidth(20);
                 text.setId(editTextNumber++);
                 editTextList.add(text);

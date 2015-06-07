@@ -10,65 +10,65 @@
     android:orientation="horizontal">
 
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-
-        <com.learningapp.infoproject.knowledgetogo.SurfaceAnimation
-            android:layout_width="0dp"
-            android:layout_height="140dp"
-            android:id="@+id/surfaceDrawing"
-            android:layout_weight="1.01" />
-
-    </LinearLayout>
-
     <org.apmem.tools.layouts.FlowLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:id="@+id/flow_layout"
-        android:layout_height="150dp"
+        android:layout_height="210dp"
         tools:context=".MainActivity"
         android:orientation="horizontal"
         android:weightSum="1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="false"
         android:layout_marginTop="140dp"
-        android:padding="16dp"/>
+        android:padding="16dp"
+        android:layout_toLeftOf="@+id/button_send"
+        android:layout_toStartOf="@+id/button_send" />
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
-        android:orientation="horizontal"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/linearLayout"
-        android:layout_below="@+id/flow_layout">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_send"
+        android:onClick="nextTask"
+        android:id="@+id/button_send"
+        android:layout_alignTop="@+id/flow_layout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="50dp"
+        android:background="@layout/button_choose_mode_layout"
+        android:textStyle="bold" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_send"
-            android:onClick="nextTask"
-            android:id="@+id/button_send"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Springen"
+        android:id="@+id/jump"
+        android:onClick="jump"
+        android:background="@layout/button_choose_mode_layout"
+        android:textStyle="bold"
+        android:layout_alignBottom="@+id/flow_layout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pause"
-            android:onClick="pauseAnimation"/>
+    <com.learningapp.infoproject.knowledgetogo.SurfaceAnimation
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:id="@+id/surfaceDrawing" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Springen"
-            android:id="@+id/jump"
-            android:onClick="jump"/>
-
-    </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pause"
+        android:onClick="pauseAnimation"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.01"
+        android:layout_below="@+id/jump"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/jump"
+        android:layout_alignStart="@+id/jump"
+        android:background="@layout/button_choose_mode_layout"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

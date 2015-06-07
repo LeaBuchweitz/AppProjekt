@@ -19,7 +19,9 @@
         android:layout_marginTop="87dp"
         android:paddingLeft="5dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="#ff000000"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -41,7 +43,9 @@
         android:id="@+id/user_password"
         android:layout_below="@+id/name"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="40dp"
+        android:textColor="#FF000000"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -61,7 +65,9 @@
         android:text="@string/verify_password"
         android:id="@+id/second_time_password"
         android:layout_below="@+id/password"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="#FF000000"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -81,6 +87,8 @@
         android:id="@+id/register"
         android:layout_below="@+id/verify_password"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="44dp" />
+        android:layout_marginTop="44dp"
+        android:background="@layout/button_choose_mode_layout"
+        android:textStyle="bold" />
 
 </RelativeLayout>

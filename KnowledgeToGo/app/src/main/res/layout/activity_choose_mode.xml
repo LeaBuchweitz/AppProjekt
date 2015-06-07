@@ -10,7 +10,7 @@
         android:layout_alignTop="@+id/menu"
         android:layout_alignRight="@+id/menu"
         android:layout_alignEnd="@+id/menu"
-        android:background="@drawable/background">
+        android:id="@+id/background">
 
     <Button
         android:layout_width="wrap_content"

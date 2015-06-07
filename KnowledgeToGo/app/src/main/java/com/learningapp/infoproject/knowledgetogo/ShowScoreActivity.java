@@ -22,8 +22,10 @@ public class ShowScoreActivity extends Activity {
 
         // Import layout features
         ImageView scorePig = (ImageView) findViewById(R.id.score_pig);
+        ImageView crown = (ImageView) findViewById(R.id.crown);
         TextView runDistance = (TextView) findViewById(R.id.distance);
         TextView encouragement = (TextView) findViewById(R.id.encouragement);
+        crown.setImageResource(R.drawable.best_user);
 
         // Get score-info from QuestionModePigActivity
         Bundle reachedScore = getIntent().getExtras();

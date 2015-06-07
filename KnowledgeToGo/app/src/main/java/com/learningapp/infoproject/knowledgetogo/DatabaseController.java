@@ -45,7 +45,6 @@ public class DatabaseController extends Thread {
         this.requestType = requestType;
     }
 
-
     public DatabaseController (int requestType, String url, String lecture, int userID) {
         this.userID = userID;
         this.lecture = lecture;

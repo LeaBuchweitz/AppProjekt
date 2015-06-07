@@ -177,6 +177,7 @@ public class LoginBeginActivity extends Activity {
     }
 
     String pass;
+    String userID;
     String infoFromServer;
 
     //sets up new handler
@@ -197,13 +198,15 @@ public class LoginBeginActivity extends Activity {
                         password.getText().clear();
                         name.getText().clear();
                     } else {
-                        // User-name is available, next request to compare password
-                        new NetworkController(userName, "getPass&name=", LoginHandler).start();
+                        // User-name is available, next request to compare password and get User-ID
+                        new NetworkController(userName, "getUser&name=", LoginHandler).start();
                     }
                 } catch (Exception e) {
                     // Get correct password from database
                     JSONObject passWrapped = new JSONObject(infoFromServer);
                     pass = passWrapped.getString("UPass");
+                    userID = passWrapped.getString("UID");
+
 
                     // Entered password is not the same as in database
                     if (!pass.equals(userPassword)) {
@@ -212,7 +215,7 @@ public class LoginBeginActivity extends Activity {
                         // If entered password is correct, go on to ChooseModeActivity
                     } else {
                         // Keks
-                        Toast.makeText(LoginBeginActivity.this, DBVars.SESSION_COOKIE , Toast.LENGTH_LONG).show();
+                        //Toast.makeText(LoginBeginActivity.this, DBVars.SESSION_COOKIE , Toast.LENGTH_LONG).show();
 
                         Intent chooseMode = new Intent(LoginBeginActivity.this, ChooseModeActivity.class);
                         startActivity(chooseMode);

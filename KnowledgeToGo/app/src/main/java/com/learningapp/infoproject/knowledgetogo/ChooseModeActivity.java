@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +47,7 @@ public class ChooseModeActivity extends Activity {
         setContentView(R.layout.activity_choose_mode);
 
         // Import layout feature
+        RelativeLayout background = (RelativeLayout) findViewById(R.id.background);
         drawer = (DrawerLayout) findViewById(R.id.drawer);
         Button addQuestion = (Button) findViewById(R.id.add_question);
         Button read = (Button) findViewById(R.id.learn);
@@ -52,6 +56,18 @@ public class ChooseModeActivity extends Activity {
         ImageButton chooseLecture = (ImageButton) findViewById(R.id.choose_lecture);
         chooseLecture.setImageResource(R.drawable.doktor_hut);
         lecture_menu = (ListView) findViewById(R.id.lecture_menu);
+
+        // Check display size for the correct background
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        if(width > 600 && height > 800) {
+            background.setBackgroundResource(R.drawable.background2);
+        } else {
+            background.setBackgroundResource(R.drawable.background);
+        }
 
         // Open Drawer-Menu by clicking on Button
         chooseLecture.setOnClickListener(new View.OnClickListener() {
