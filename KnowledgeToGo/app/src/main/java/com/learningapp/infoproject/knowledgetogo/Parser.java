@@ -3,10 +3,16 @@ package com.learningapp.infoproject.knowledgetogo;
 import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.Display;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.apmem.tools.layouts.FlowLayout;
+
 import java.util.ArrayList;
 
 /**
@@ -19,12 +25,95 @@ public class Parser {
     static final float TEXT_VIEW_SIZE = 16;
     static final int TEXT_HEIGHT = 50;
     static final int TEXT_PADDING = 5;
+    private static final int CORRECT = Color.GREEN;
+    private static final int WRONG = Color.RED;
+
+    /**
+     * Creates the text.
+     * @param s String to parse
+     * @param layout Layout to add to.
+     * @param context Context off the app.
+     * @return
+     */
+    public static void createText(String s, ViewGroup layout, Context context){
+        ArrayList<String> elements = getTextElements(s);
+
+        for(int i = 0; i < elements.size(); i++){
+            TextView text = new TextView(context);
+            text.setText(elements.get(i));
+            text.setPadding(TEXT_PADDING, TEXT_PADDING, TEXT_PADDING, TEXT_PADDING);
+            layout.addView(text);
+        }
+    }
+
+
+    /**
+     * Adds elements of the provided string to the layout in heading and text fields.
+     * @param s String to parse
+     * @param layout Layout to add to.
+     * @param context Context of the app.
+     * @return The added editTexts in a list
+     */
+    public static ArrayList<EditText> createNotes(String s, FlowLayout layout, Context context) {
+        ArrayList<EditText> editTextList = new ArrayList<>();
+
+        ArrayList<String> elements = getTextElements(s);
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        int start = getStartElement(s);
+        for (int i = 0; i < start; i++) {
+            TextView heading = new TextView(context);
+            heading.setText(elements.get(i));
+            heading.setHeight(TEXT_HEIGHT);
+            heading.setTextSize(TEXT_VIEW_SIZE);
+            heading.setPadding(TEXT_PADDING,TEXT_PADDING,TEXT_PADDING,TEXT_PADDING);
+            layout.addView(heading);
+        }
+
+        for (int i = start; i < elements.size(); i++) {
+            EditText text = new EditText(context);
+            text.setHint(context.getString(R.string.text_gap));
+            text.setHeight(TEXT_HEIGHT);
+            text.setTextSize(EDIT_TEXT_SIZE);
+            text.setWidth(width - 40);
+            text.setPadding(20,TEXT_PADDING,TEXT_PADDING,10);
+            //text.setMinimumWidth(20);
+            text.setId(i - start);
+            editTextList.add(text);
+            layout.addView(text);
+        }
+
+        return editTextList;
+    }
+
+    /**
+     * Finds the index of the first element staring with a '{'.
+     * @param s
+     * @return
+     */
+    private static int getStartElement(String s) {
+        int r = 1;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == PARENTHESIS_VALUES[0])
+                break;
+            if (s.charAt(i) == ' ')
+                r++;
+        }
+
+        return r;
+    }
 
     /**
      * Adds elements of the provided string to the layout in blank fields and text fields.
      * @param s String to parse
      * @param layout Layout to add to.
-     * @param context Context off the app.
+     * @param context Context of the app.
      * @return The added editTexts in a list
      */
     public static ArrayList<EditText> createGapText(String s, ViewGroup layout, Context context){
@@ -58,6 +147,22 @@ public class Parser {
         return editTextList;
     }
 
+    /**
+     * Checks if s has no parenthesis and contains anything
+     * @param s input string
+     * @return true if correct
+     */
+    public static boolean checkHeading(String s){
+
+        for(int i = 0; i < s.length(); i++){
+            if (s.charAt(i) == PARENTHESIS_VALUES[0] ||
+                s.charAt(i) == PARENTHESIS_VALUES[1]){
+                return false;
+            }
+        }
+
+        return !s.equals("") && s.charAt(0) != ' ';
+    }
 
     /**
      * Checks if s has (at least one) filled and closed parenthesis-pairs
@@ -77,8 +182,7 @@ public class Parser {
                 correct = true;
                 parenthesisOpen = false;
             } else if ((!parenthesisOpen && s.charAt(i) == PARENTHESIS_VALUES[1])
-                    || (parenthesisOpen && s.charAt(i) == PARENTHESIS_VALUES[0])
-                    || (parenthesisOpen && s.charAt(i) == ' ')){
+                    || (parenthesisOpen && s.charAt(i) == PARENTHESIS_VALUES[0])){
                 return false;
             }
         }
@@ -108,13 +212,76 @@ public class Parser {
             text.setPadding(TEXT_PADDING, TEXT_PADDING, TEXT_PADDING, TEXT_PADDING);
             if (isGap.get(i)) {
                 if (correct.get(k)) {
-                    text.setTextColor(Color.GREEN);
+                    text.setTextColor(CORRECT);
                     rightAnswers++;
                 } else {
-                    text.setTextColor(Color.RED);
+                    text.setTextColor(WRONG);
                 }
                 k++;
             }
+            layout.addView(text);
+        }
+
+        TextView text = new TextView(context);
+        text.setText("Du hast "+Integer.toString(rightAnswers)+" von "+Integer.toString(correct.size())+" richtig.");
+        text.setPadding(TEXT_PADDING, TEXT_PADDING, TEXT_PADDING, TEXT_PADDING);
+        layout.addView(text);
+
+        return rightAnswers;
+    }
+
+    /**
+     * Creates the solve of the text for Notes.
+     * @param s String to parse
+     * @param entries Entered answers in a list.
+     * @param layout Layout to add to.
+     * @param context Context off the app.
+     * @return The number of correct answers
+     */
+    public static int createNotesSolve(String s, ArrayList<String> entries, FlowLayout layout, Context context) {
+        ArrayList<String> elements = getTextElements(s);
+        ArrayList<String> answers = new ArrayList<>();
+        int start = getStartElement(s);
+
+        for (int i = 0; i < elements.size(); i++) {
+            if (i >= start)
+                answers.add(elements.get(i));
+        }
+
+        ArrayList<Boolean> correct = correctAnswersNotes(entries, answers);
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        int rightAnswers = 0; // Adds correct-answers-counter
+
+
+        for (int i = 0; i < start; i++) {
+            TextView heading = new TextView(context);
+            heading.setText(elements.get(i));
+            heading.setHeight(TEXT_HEIGHT);
+            heading.setTextSize(TEXT_VIEW_SIZE);
+            heading.setPadding(TEXT_PADDING,TEXT_PADDING,TEXT_PADDING,TEXT_PADDING);
+            layout.addView(heading);
+        }
+
+        for (int i = start; i < elements.size(); i++) {
+            TextView text = new TextView(context);
+            text.setText(elements.get(i));
+            if (correct.get(i - start)) {
+                text.setTextColor(CORRECT);
+                rightAnswers++;
+            } else {
+                text.setTextColor(WRONG);
+            }
+            text.setHeight(TEXT_HEIGHT);
+            text.setTextSize(TEXT_VIEW_SIZE);
+            text.setWidth(width - 40);
+            text.setPadding(20,TEXT_PADDING,TEXT_PADDING,10);
+            //text.setMinimumWidth(20);
             layout.addView(text);
         }
 
@@ -233,6 +400,32 @@ public class Parser {
 
         for (int i = 0; i < answers.size(); i++){
             correct.add(answers.get(i).equalsIgnoreCase(entries.get(i)));
+        }
+
+        return correct;
+    }
+
+    /**
+     * Compares two Lists of Strings, checks every pair for matches.
+     * @param entries List to check
+     * @param answers Right answers
+     * @return a boolean list with right and wrong
+     */
+    public static ArrayList<Boolean> correctAnswersNotes(ArrayList<String> entries, ArrayList<String> answers){
+        ArrayList<Boolean> correct = new ArrayList<>();
+
+        for (int i = 0; i < answers.size(); i++){
+            Boolean c = false;
+            for (int j = 0; j < entries.size(); j++) {
+                if (answers.get(i).equalsIgnoreCase(entries.get(j))){
+                    answers.remove(i);
+                    entries.remove(j);
+                    c = true;
+                    i--;
+                    break;
+                }
+            }
+            correct.add(c);
         }
 
         return correct;

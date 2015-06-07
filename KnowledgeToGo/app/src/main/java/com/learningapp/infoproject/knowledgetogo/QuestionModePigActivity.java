@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 public class QuestionModePigActivity extends Activity {
 
+    private DatabaseController db;
+
     private FlowLayout layout;
     private SurfaceAnimation animation;
     private ArrayList<EditText> editTextList;
@@ -45,9 +47,10 @@ public class QuestionModePigActivity extends Activity {
         questionID = new ArrayList<>();
 
         // Make download request for questions. The result is saved into the given ArrayLists
-        new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
+        db = new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
                 "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid="+Integer.toString(lectureID),
-                questionContent, questionType, questionID).start();
+                questionContent, questionType, questionID);
+        db.start();
 
         setContentView(R.layout.activity_question_mode_pig);
 
@@ -65,7 +68,9 @@ public class QuestionModePigActivity extends Activity {
      * Starts first activity
      */
     private void startTask() {
-        modeIsSend = false;
+        modeIsSend = true;
+        while (db.isAlive());
+        questionTask();
     }
 
     /**
@@ -100,7 +105,7 @@ public class QuestionModePigActivity extends Activity {
                 editTextList = Parser.createGapText(downloadedText, layout, this);
                 break;
             case DBVars.QUESTION_TYPE_NOTES:
-
+                editTextList = Parser.createNotes(downloadedText, layout, this);
                 break;
 
         }
@@ -123,7 +128,7 @@ public class QuestionModePigActivity extends Activity {
                 answerScore = Parser.createSolve(downloadedText, entries, layout, this);
                 break;
             case DBVars.QUESTION_TYPE_NOTES:
-
+                answerScore = Parser.createNotesSolve(downloadedText, entries, layout, this);
                 break;
         }
 
@@ -131,15 +136,17 @@ public class QuestionModePigActivity extends Activity {
         animation.getThread().setScore(score);
 
         if (answerScore == 0){
+
             lifes--;
             animation.getThread().pigFail();
+
             if (lifes == 0){
-                //lifes--;
                 endTask();
                 return;
             }
-            //animation.getThread().pigFail();
-            //lifes--;
+
+        } else {
+            animation.getThread().pigJump();
         }
 
         questionCounter++;
@@ -170,7 +177,7 @@ public class QuestionModePigActivity extends Activity {
     }
 
     public void jump(View view){
-        animation.getThread().pigJump(1000,1000);
+        animation.getThread().pigJump();
     }
 
 }
