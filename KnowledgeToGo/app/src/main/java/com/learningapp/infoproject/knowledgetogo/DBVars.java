@@ -15,6 +15,7 @@ public final class DBVars {
     public static final int REQUEST_ALREADY_THERE = 4;
     public static final int REQUEST_NEW_LECTURE = 5;
     public static final int REQUEST_QUESTION_INSERT = 6;
+    public static final int REQUEST_UPLOAD_SCORE = 7;
 
     public static String SESSION_COOKIE = null;
 
