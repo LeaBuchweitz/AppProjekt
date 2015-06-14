@@ -160,10 +160,17 @@ public class ChooseModeActivity extends Activity {
                                         dialog.dismiss();
                                     }
                                 });
+                        // New drawer if you choose a new lecture you want to be part of
                         builderSingle.setAdapter(listAdapter, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String chosen = listAdapter.getItem(which);
+                                ArrayList<String> chosenLecture = new ArrayList<String>();
+                                chosenLecture.add(chosen);
+                                updateDrawer(chosenLecture);
+                                finish();
+                                Intent intent = new Intent(ChooseModeActivity.this, ChooseModeActivity.class);
+                                startActivity(intent);
 
                             }
                         });

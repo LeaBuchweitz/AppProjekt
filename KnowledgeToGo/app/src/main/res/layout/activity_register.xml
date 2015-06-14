@@ -88,7 +88,7 @@
         android:layout_below="@+id/verify_password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
-        android:background="@layout/button_choose_mode_layout"
+        android:background="@layout/button_layout"
         android:textStyle="bold" />
 
 </RelativeLayout>
