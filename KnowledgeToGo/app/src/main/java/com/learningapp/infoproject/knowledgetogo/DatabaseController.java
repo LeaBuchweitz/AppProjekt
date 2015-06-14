@@ -130,6 +130,8 @@ public class DatabaseController extends Thread {
                             Log.i("lecture", "Vorlesung gibts schon!");
                         }
                         break;
+                    case DBVars.REQUEST_UPLOAD_SCORE:
+                        break;
                 }
 
             } catch (JSONException e) {

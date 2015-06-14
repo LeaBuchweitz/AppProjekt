@@ -75,12 +75,22 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
-        android:id="@+id/textView"
+        android:id="@+id/bestUser"
         android:textColor="#ffffd855"
         android:textStyle="bold"
         android:layout_below="@+id/best"
         android:layout_alignRight="@+id/your_distance"
         android:layout_alignEnd="@+id/your_distance"
         android:layout_marginTop="8dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/bestUser"
+        android:id="@+id/bestUserList"
+        android:layout_alignLeft="@+id/crown"
+        android:layout_alignStart="@+id/crown">
+    </LinearLayout>
 
 </RelativeLayout>
