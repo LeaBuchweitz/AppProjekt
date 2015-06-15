@@ -56,6 +56,7 @@
     <string name="title_activity_read_question">Lern-Modus</string>
 
     <string name="your_distance">Deine Distanz</string>
+    <string name="your_rang">Dein Platz in der Rangliste:</string>
     <string name="best_user">Bester Spieler dieser Vorlesung:</string>
     <string name="action_settings">Settings</string>
     <string name="gapTextNotValid">Der Lückentext ist nicht korrekt! Bitte überprüfe, ob du die Klammern { und } richtig gesetzt hast. Jede Klammer muss geschlossen werden und es darf nur eine Klammer auf einmal offen sein.</string>

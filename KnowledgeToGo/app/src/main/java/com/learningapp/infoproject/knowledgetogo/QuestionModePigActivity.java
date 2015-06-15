@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 public class QuestionModePigActivity extends Activity {
 
     private DatabaseController db;
+    private CountDownTimer countDownTimer;
 
     private FlowLayout layout;
     private SurfaceAnimation animation;
@@ -118,6 +120,8 @@ public class QuestionModePigActivity extends Activity {
                 break;
 
         }
+        // Timer: 30sec to answer questions
+        startTimer();
     }
 
     /**
@@ -188,6 +192,18 @@ public class QuestionModePigActivity extends Activity {
 
     public void jump(View view){
         animation.getThread().pigJump();
+    }
+
+    // Count down of 30sec
+    public void startTimer() {
+        countDownTimer = new CountDownTimer(30000, 1000) {
+            public void onTick(long millisUntilFinished) {
+
+            }
+            public void onFinish() {
+                animation.getThread().pigFail();
+            }
+        }.start();
     }
 
 }

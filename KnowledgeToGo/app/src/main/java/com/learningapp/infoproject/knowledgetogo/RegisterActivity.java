@@ -209,6 +209,9 @@ public class RegisterActivity extends Activity {
                 if(infoFromServer.equals("true")) {
                     Toast.makeText(RegisterActivity.this, "Du bist registriert! Du kannst dich jetzt einloggen!", Toast.LENGTH_LONG).show();
                     requestSent = false;
+                    Intent login = new Intent(RegisterActivity.this, LoginBeginActivity.class);
+                    finish();
+                    startActivity(login);
                 }
             } catch (Exception e) {
             }

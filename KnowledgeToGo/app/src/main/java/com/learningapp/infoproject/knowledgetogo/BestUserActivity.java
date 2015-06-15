@@ -22,8 +22,8 @@ public class BestUserActivity extends ActionBarActivity {
     private int userID;
     static final int TEXT_PADDING = 5;
     private float score;
-    private ArrayList<String> names;
-    private ArrayList<Integer> scores;
+    private ArrayList<String> names = new ArrayList<String>();
+    private ArrayList<Integer> scores = new ArrayList<Integer>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class BestUserActivity extends ActionBarActivity {
         setContentView(R.layout.activity_best_user2);
 
         // Import layout features
-        LinearLayout scoreList = (LinearLayout) findViewById(R.id.bestUserList);
+        //LinearLayout scoreList = (LinearLayout) findViewById(R.id.bestUserList);
         TextView bestUser = (TextView) findViewById(R.id.bestUser);
         TextView second = (TextView) findViewById(R.id.second);
         TextView third = (TextView) findViewById(R.id.third);
@@ -52,7 +52,7 @@ public class BestUserActivity extends ActionBarActivity {
         userID = prefs.getInt("User-ID",0);
 
         // Show best users of this lecture
-        /*db = new DatabaseController(DBVars.REQUEST_BEST_USER,
+        db = new DatabaseController(DBVars.REQUEST_BEST_USER,
                 "http://android.getenv.net/?mod=Lecture&fun=getBestUser&lid="+lectureId, names, scores);
         db.start();
         while (db.isAlive());

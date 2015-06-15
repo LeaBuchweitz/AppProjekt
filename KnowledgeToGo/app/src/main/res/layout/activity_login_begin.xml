@@ -70,7 +70,8 @@
         android:textColor="#ff000000"
         android:textStyle="bold"
         android:background="@layout/button_layout"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -78,10 +79,11 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/register"
         android:id="@+id/newAccount"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:textColor="#ff000000" />
+        android:textColor="#ff000000"
+        android:layout_below="@+id/enterPassword"
+        android:layout_alignRight="@+id/enterPassword"
+        android:layout_alignEnd="@+id/enterPassword"
+        android:layout_marginBottom="15dp" />
 
     <ImageView
         android:id="@+id/schwein_steht"

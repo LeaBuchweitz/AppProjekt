@@ -43,14 +43,14 @@ public class ShowScoreActivity extends Activity {
         setContentView(R.layout.activity_show_score);
 
         // Import layout features
-        LinearLayout scoreList = (LinearLayout) findViewById(R.id.bestUserList);
+        //LinearLayout scoreList = (LinearLayout) findViewById(R.id.bestUserList);
         ImageView scorePig = (ImageView) findViewById(R.id.score_pig);
-        ImageView crown = (ImageView) findViewById(R.id.crown);
         TextView runDistance = (TextView) findViewById(R.id.distance);
         TextView encouragement = (TextView) findViewById(R.id.encouragement);
-        TextView bestUser = (TextView) findViewById(R.id.bestUser);
-        crown.setImageResource(R.drawable.best_user);
+        TextView rang = (TextView) findViewById(R.id.your_rang);
         final Button best = (Button) findViewById(R.id.best_button);
+
+        rang.setText("1"+".");
 
         // Get score-info from QuestionModePigActivity
         Bundle reachedScore = getIntent().getExtras();

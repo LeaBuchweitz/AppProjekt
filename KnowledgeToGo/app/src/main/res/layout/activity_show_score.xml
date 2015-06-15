@@ -50,56 +50,42 @@
         android:textStyle="bold"
         android:textColor="#ffffffff" />
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/crown"
-        android:layout_below="@+id/best"
-        android:layout_alignLeft="@+id/score_pig"
-        android:layout_alignStart="@+id/score_pig" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/best_user"
-        android:id="@+id/best"
-        android:layout_below="@+id/encouragement"
-        android:layout_centerHorizontal="true"
+        android:text="@string/your_rang"
+        android:id="@+id/rang"
         android:textColor="#ffffffff"
         android:textStyle="bold"
-        android:gravity="center_horizontal"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/bestUser"
-        android:textColor="#ffffd855"
-        android:textStyle="bold"
-        android:layout_below="@+id/best"
-        android:layout_alignRight="@+id/your_distance"
-        android:layout_alignEnd="@+id/your_distance"
-        android:layout_marginTop="8dp" />
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/bestUser"
-        android:id="@+id/bestUserList"
-        android:layout_alignLeft="@+id/crown"
-        android:layout_alignStart="@+id/crown">
-    </LinearLayout>
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/encouragement"
+        android:layout_alignRight="@+id/score_pig"
+        android:layout_alignEnd="@+id/score_pig" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bestenliste"
         android:id="@+id/best_button"
-        android:layout_alignBottom="@+id/distance"
-        android:layout_toRightOf="@+id/distance"
-        android:layout_toEndOf="@+id/distance" />
+        android:layout_below="@+id/rang"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:textColor="#fc000000"
+        android:background="@layout/button_best_user"
+        android:textStyle="bold"
+        android:padding="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/your_rang"
+        android:layout_alignTop="@+id/rang"
+        android:layout_toRightOf="@+id/rang"
+        android:textColor="#ffffe46b"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"/>
 
 </RelativeLayout>
