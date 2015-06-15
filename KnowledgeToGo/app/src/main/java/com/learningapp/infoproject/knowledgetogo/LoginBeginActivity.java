@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -176,9 +177,9 @@ public class LoginBeginActivity extends Activity {
         }
     }
 
-    String pass;
-    String userID;
-    String infoFromServer;
+    private String pass;
+    public String userID;
+    private String infoFromServer;
 
     //sets up new handler
     private final Handler LoginHandler = new Handler() {
@@ -207,6 +208,11 @@ public class LoginBeginActivity extends Activity {
                     pass = passWrapped.getString("UPass");
                     userID = passWrapped.getString("UID");
 
+                    // Save User-ID in Shared Preferences
+                    SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("User-ID", Integer.parseInt(userID));
+                    editor.apply();
 
                     // Entered password is not the same as in database
                     if (!pass.equals(userPassword)) {

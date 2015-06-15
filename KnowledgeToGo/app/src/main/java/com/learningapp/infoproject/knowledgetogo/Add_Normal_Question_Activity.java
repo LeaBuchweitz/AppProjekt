@@ -1,7 +1,9 @@
 package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -48,6 +50,10 @@ public class Add_Normal_Question_Activity extends ActionBarActivity {
         forthAnswer = (EditText) findViewById(R.id.forth_answer);
         numberAnswers = 1;
         enoughAnswers = false;
+
+        // Get Info from SharedPreferences for User-ID
+        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+        uid = prefs.getInt("User-ID",0);
 
         // Add answer-possibilities
         addAnswer.setOnClickListener(new View.OnClickListener() {

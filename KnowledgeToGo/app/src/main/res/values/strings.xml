@@ -62,6 +62,7 @@
     <string name="title_activity_show_score">Geschafft!</string>
     <string name="title_activity_adapter_helper">AdapterHelperActivity</string>
     <string name="hello_world">Hi</string>
+    <string name="title_activity_best_user">Bestenliste</string>
 
 
 </resources>

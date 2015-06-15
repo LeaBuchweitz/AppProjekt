@@ -14,7 +14,10 @@
         android:id="@+id/text_head"
         android:layout_below="@+id/question"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="false"
+        android:textColor="#ff070707"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -37,7 +40,10 @@
         android:id="@+id/save_question"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="sendQuestion"/>
+        android:onClick="sendQuestion"
+        android:textStyle="bold"
+        android:textColor="#FF000000"
+        android:background="@layout/button_choose_mode_layout"/>
 
 <!--    <CheckBox
         android:layout_width="wrap_content"

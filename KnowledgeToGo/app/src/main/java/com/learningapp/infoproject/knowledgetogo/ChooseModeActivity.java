@@ -2,9 +2,13 @@ package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Display;
@@ -34,11 +38,12 @@ public class ChooseModeActivity extends Activity {
     private DrawerLayout drawer;
     private ArrayAdapter adapter;
     private ListView lecture_menu;
-    //protected int lectureID;
     private ArrayList<String> lectures = new ArrayList<String>();
     private ArrayList<Integer> lectureID = new ArrayList<Integer>();
+    //private MediaPlayer mMediaPlayer = new MediaPlayer();
 
-    private int userID = 1;
+    private int uid;
+    private int lid;
 
 
     @Override
@@ -57,13 +62,23 @@ public class ChooseModeActivity extends Activity {
         chooseLecture.setImageResource(R.drawable.doktor_hut);
         lecture_menu = (ListView) findViewById(R.id.lecture_menu);
 
+        // Get Info from SharedPreferences for User-ID
+        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+        uid = prefs.getInt("User-ID", 0);
+
+        // Bird sound in background
+        /*mMediaPlayer = MediaPlayer.create(this, R.raw.bird);
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer.setLooping(true);
+        mMediaPlayer.start();*/
+
         // Check display size for the correct background
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
         int height = size.y;
-        if(width > 600 && height > 800) {
+        if (width > 600 && height > 800) {
             background.setBackgroundResource(R.drawable.background2);
         } else {
             background.setBackgroundResource(R.drawable.background);
@@ -83,11 +98,12 @@ public class ChooseModeActivity extends Activity {
             public void onClick(View v) {
                 Intent readQquestion = new Intent(ChooseModeActivity.this, ReadQuestionActivity.class);
                 startActivity(readQquestion);
+                //mMediaPlayer.stop();
             }
         });
 
         adapter = new ArrayAdapter<String>(this, R.layout.one_lecture_line, lectures);
-        updateDrawer(lectures);
+        updateDrawer();
         lecture_menu.setAdapter(adapter);
 
         // Add ClickListener to enter a special lecture
@@ -98,11 +114,18 @@ public class ChooseModeActivity extends Activity {
 
                 switch (position) {
                     case 0: {
+                        // Delete User-ID from Shared Preferences
+                        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.remove("User-ID");
+                        editor.apply();
+
                         // Logout, return to Login-page and delete session cookie
                         DBVars.SESSION_COOKIE = null;
-                        Toast.makeText(ChooseModeActivity.this, "Cookie weg "+ DBVars.SESSION_COOKIE, Toast.LENGTH_LONG).show();
+                        Toast.makeText(ChooseModeActivity.this, "Cookie weg " + DBVars.SESSION_COOKIE, Toast.LENGTH_LONG).show();
                         Intent backLogin = new Intent(ChooseModeActivity.this, LoginBeginActivity.class);
                         startActivity(backLogin);
+                        //mMediaPlayer.stop();
                         finish();
                         break;
                     }
@@ -118,10 +141,9 @@ public class ChooseModeActivity extends Activity {
                             public void onClick(DialogInterface dialog, int which) {
                                 String addThisLecture = enterLecture.getText().toString();
                                 // Test if Lecture already exists
-                                new DatabaseController(DBVars.REQUEST_ALREADY_THERE, "http://android.getenv.net/?mod=Lecture&fun=checkLectureName&name="+addThisLecture,
-                                        addThisLecture, userID).start();
-                                lectures.clear();
-                                updateDrawer(lectures);
+                                new DatabaseController(DBVars.REQUEST_ALREADY_THERE, "http://android.getenv.net/?mod=Lecture&fun=checkLectureName&name=" + addThisLecture,
+                                        addThisLecture, uid).start();
+                                updateDrawer();
                                 finish();
                                 Intent intent = new Intent(ChooseModeActivity.this, ChooseModeActivity.class);
                                 startActivity(intent);
@@ -140,15 +162,15 @@ public class ChooseModeActivity extends Activity {
                     case 2: { // Show all available lectures
                         ArrayList<String> allLectures = new ArrayList<String>();
                         DatabaseController db = new DatabaseController(DBVars.REQUEST_LECTURES_DOWNLOAD,
-                                "http://android.getenv.net/?mod=Lecture&fun=getLectures",allLectures, lectureID);
+                                "http://android.getenv.net/?mod=Lecture&fun=getLectures", allLectures, lectureID);
                         db.start();
-                        while (db.isAlive());
+                        while (db.isAlive()) ;
                         AlertDialog.Builder builderSingle = new AlertDialog.Builder(ChooseModeActivity.this);
                         builderSingle.setTitle("Wähle eine Vorlesung der du beitreten möchtest");
                         final ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(ChooseModeActivity.this,
                                 android.R.layout.select_dialog_singlechoice);
 
-                        for(int i = 0; i < allLectures.size(); i++) {
+                        for (int i = 0; i < allLectures.size(); i++) {
                             listAdapter.add(allLectures.get(i));
                         }
                         builderSingle.setCancelable(true);
@@ -164,11 +186,8 @@ public class ChooseModeActivity extends Activity {
                         builderSingle.setAdapter(listAdapter, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String chosen = listAdapter.getItem(which);
-                                ArrayList<String> chosenLecture = new ArrayList<String>();
-                                chosenLecture.add(chosen);
-                                updateDrawer(chosenLecture);
-                                finish();
+                                //ToDo neuen score für getippte lecture anlegen
+                                //
                                 Intent intent = new Intent(ChooseModeActivity.this, ChooseModeActivity.class);
                                 startActivity(intent);
 
@@ -176,7 +195,13 @@ public class ChooseModeActivity extends Activity {
                         });
                         builderSingle.create().show();
                     }
-                    default: {} //ToDo alle ID's für Vorlesungen zuordnen
+                    default: { //ToDo alle ID's für VOrlesungen abfragen
+                        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putInt("User-ID", lid);
+                        editor.apply();
+                        break;
+                    }
                 }
             }
         });
@@ -194,7 +219,7 @@ public class ChooseModeActivity extends Activity {
         addQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(addList.getVisibility() == View.INVISIBLE) {
+                if (addList.getVisibility() == View.INVISIBLE) {
                     addList.setVisibility(View.VISIBLE);
                 } else {
                     addList.setVisibility(View.INVISIBLE);
@@ -207,13 +232,23 @@ public class ChooseModeActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
-                    case 0: {Intent gap_question = new Intent(ChooseModeActivity.this, Add_Gap_Question_Activity.class);
-                             startActivity(gap_question);
-                             break;}
-                    case 1: {Intent normal_question = new Intent(ChooseModeActivity.this, Add_Normal_Question_Activity.class);
-                             startActivity(normal_question);
-                             break;}
-                    default: {break;}
+                    case 0: {
+                        Intent gap_question = new Intent(ChooseModeActivity.this, Add_Gap_Question_Activity.class);
+                        startActivity(gap_question);
+                        finish();
+                        //mMediaPlayer.stop();
+                        break;
+                    }
+                    case 1: {
+                        Intent normal_question = new Intent(ChooseModeActivity.this, Add_Normal_Question_Activity.class);
+                        startActivity(normal_question);
+                        finish();
+                        //mMediaPlayer.stop();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
                 }
             }
         });
@@ -232,17 +267,27 @@ public class ChooseModeActivity extends Activity {
     public void onBackPressed() {
     }
 
-    public void updateDrawer (ArrayList<String> lectures) {
+    public void updateDrawer() {
         lectures.add("Logout");
         lectures.add("Hinzufügen...");
         lectures.add("Suchen...");
 
         // Make download request for lectures. The result is saved into the given ArrayLists
         DatabaseController db = new DatabaseController(DBVars.REQUEST_LECTURES_DOWNLOAD,
-                "http://android.getenv.net/?mod=User&fun=getLectures&uid="+userID,lectures, lectureID);
+                "http://android.getenv.net/?mod=User&fun=getLectures&uid=" + uid, lectures, lectureID);
         db.start();
-        while (db.isAlive());
+        while (db.isAlive()) ;
+
         //lecture_menu.setAdapter(adapter);
 
     }
+
+   /* @Override
+    public void onRestart() {
+        super.onRestart();
+        /*mMediaPlayer = MediaPlayer.create(this, R.raw.bird);
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer.setLooping(true);
+        mMediaPlayer.start();
+    } */
 }

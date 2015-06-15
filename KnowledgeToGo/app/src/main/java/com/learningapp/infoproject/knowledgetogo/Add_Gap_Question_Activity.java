@@ -1,7 +1,9 @@
 package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +27,10 @@ public class Add_Gap_Question_Activity extends ActionBarActivity {
         setContentView(R.layout.activity_add__gap__question_);
         content = (EditText) findViewById(R.id.text);
         uploaded = false;
+
+        // Get Info from SharedPreferences for User-ID
+        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+        uid = prefs.getInt("User-ID",0);
     }
 
     public void sendQuestion(View view){

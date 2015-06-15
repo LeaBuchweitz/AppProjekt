@@ -1,12 +1,17 @@
 package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,7 +29,7 @@ public class ShowScoreActivity extends Activity {
     private float numberQuestions;
 
     private int lectureId=1;
-    private int userID=1;
+    private int userID;
 
     private ArrayList<String> names;
     private ArrayList<Integer> scores;
@@ -45,6 +50,7 @@ public class ShowScoreActivity extends Activity {
         TextView encouragement = (TextView) findViewById(R.id.encouragement);
         TextView bestUser = (TextView) findViewById(R.id.bestUser);
         crown.setImageResource(R.drawable.best_user);
+        final Button best = (Button) findViewById(R.id.best_button);
 
         // Get score-info from QuestionModePigActivity
         Bundle reachedScore = getIntent().getExtras();
@@ -52,6 +58,10 @@ public class ShowScoreActivity extends Activity {
             score = reachedScore.getInt("Reached-Score");
             numberQuestions = reachedScore.getInt("Number-Questions");
         }
+
+        // Get Info from SharedPreferences for User-ID
+        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+        userID = prefs.getInt("User-ID",0);
 
         names = new ArrayList<>();
         scores = new ArrayList<>();
@@ -82,6 +92,15 @@ public class ShowScoreActivity extends Activity {
             }
         }
 
+        best.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent bestUser = new Intent(ShowScoreActivity.this, BestUserActivity.class);
+                bestUser.putExtra("Reached-Score", score);
+                startActivity(bestUser);
+            }
+        });
+
 
         db = new DatabaseController(DBVars.REQUEST_UPLOAD_SCORE,
                 "http://android.getenv.net/?mod=User&fun=setScore&lid="+lectureId+"&uid="+userID+"&score="+score);
@@ -89,7 +108,7 @@ public class ShowScoreActivity extends Activity {
 
         while (db.isAlive());
 
-        db = new DatabaseController(DBVars.REQUEST_BEST_USER,
+        /*db = new DatabaseController(DBVars.REQUEST_BEST_USER,
                 "http://android.getenv.net/?mod=Lecture&fun=getBestUser&lid="+lectureId, names, scores);
         db.start();
 
@@ -106,7 +125,7 @@ public class ShowScoreActivity extends Activity {
             text.setTextColor(Color.WHITE);
             text.setTypeface(null, Typeface.BOLD);
             scoreList.addView(text);
-        }
+        }*/
     }
 
 

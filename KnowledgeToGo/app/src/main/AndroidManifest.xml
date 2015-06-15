@@ -56,6 +56,10 @@
             android:name=".ShowScoreActivity"
             android:label="@string/title_activity_show_score" >
         </activity>
+        <activity
+            android:name=".BestUserActivity"
+            android:label="@string/title_activity_best_user" >
+        </activity>
     </application>
 
 </manifest>
