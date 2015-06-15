@@ -38,37 +38,10 @@
         android:background="@layout/button_choose_mode_layout"
         android:textStyle="bold" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Springen"
-        android:id="@+id/jump"
-        android:onClick="jump"
-        android:background="@layout/button_choose_mode_layout"
-        android:textStyle="bold"
-        android:layout_alignBottom="@+id/flow_layout"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
     <com.learningapp.infoproject.knowledgetogo.SurfaceAnimation
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:id="@+id/surfaceDrawing" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Pause"
-        android:onClick="pauseAnimation"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1.01"
-        android:layout_below="@+id/jump"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignLeft="@+id/jump"
-        android:layout_alignStart="@+id/jump"
-        android:background="@layout/button_choose_mode_layout"
-        android:textStyle="bold" />
 
 
 </RelativeLayout>

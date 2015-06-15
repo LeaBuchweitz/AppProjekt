@@ -2,6 +2,8 @@ package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +33,7 @@ public class QuestionModePigActivity extends Activity {
     private int questionCounter;
     private int score;
     private int lifes;
+    private MediaPlayer mMediaPlayer = new MediaPlayer();
 
     // Indicates which mode: true - shows the question, false - shows the answer
     private boolean modeIsSend;
@@ -54,6 +57,11 @@ public class QuestionModePigActivity extends Activity {
 
         setContentView(R.layout.activity_question_mode_pig);
 
+        // Pig-Run-Sound sound in background
+        mMediaPlayer = MediaPlayer.create(this, R.raw.running_pig);
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer.setLooping(true);
+
         score = 0;
         lifes = 3;
 
@@ -70,6 +78,7 @@ public class QuestionModePigActivity extends Activity {
     private void startTask() {
         modeIsSend = true;
         while (db.isAlive());
+        mMediaPlayer.start();
         questionTask();
     }
 
@@ -165,6 +174,7 @@ public class QuestionModePigActivity extends Activity {
             showCurrentScore.putExtras(extras);
             QuestionModePigActivity.this.startActivity(showCurrentScore);
             QuestionModePigActivity.this.finish();
+            mMediaPlayer.stop();
         }
     }
 

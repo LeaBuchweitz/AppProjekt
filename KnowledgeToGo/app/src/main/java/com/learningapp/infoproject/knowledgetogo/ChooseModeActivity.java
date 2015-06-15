@@ -40,7 +40,7 @@ public class ChooseModeActivity extends Activity {
     private ListView lecture_menu;
     private ArrayList<String> lectures = new ArrayList<String>();
     private ArrayList<Integer> lectureID = new ArrayList<Integer>();
-    //private MediaPlayer mMediaPlayer = new MediaPlayer();
+    private MediaPlayer mMediaPlayer = new MediaPlayer();
 
     private int uid;
     private int lid;
@@ -67,10 +67,10 @@ public class ChooseModeActivity extends Activity {
         uid = prefs.getInt("User-ID", 0);
 
         // Bird sound in background
-        /*mMediaPlayer = MediaPlayer.create(this, R.raw.bird);
+        mMediaPlayer = MediaPlayer.create(this, R.raw.bird);
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setLooping(true);
-        mMediaPlayer.start();*/
+        mMediaPlayer.start();
 
         // Check display size for the correct background
         Display display = getWindowManager().getDefaultDisplay();
@@ -98,7 +98,7 @@ public class ChooseModeActivity extends Activity {
             public void onClick(View v) {
                 Intent readQquestion = new Intent(ChooseModeActivity.this, ReadQuestionActivity.class);
                 startActivity(readQquestion);
-                //mMediaPlayer.stop();
+                mMediaPlayer.stop();
             }
         });
 
@@ -125,7 +125,7 @@ public class ChooseModeActivity extends Activity {
                         Toast.makeText(ChooseModeActivity.this, "Cookie weg " + DBVars.SESSION_COOKIE, Toast.LENGTH_LONG).show();
                         Intent backLogin = new Intent(ChooseModeActivity.this, LoginBeginActivity.class);
                         startActivity(backLogin);
-                        //mMediaPlayer.stop();
+                        mMediaPlayer.stop();
                         finish();
                         break;
                     }
@@ -165,7 +165,7 @@ public class ChooseModeActivity extends Activity {
                                 "http://android.getenv.net/?mod=Lecture&fun=getLectures", allLectures, lectureID);
                         db.start();
                         while (db.isAlive()) ;
-                        AlertDialog.Builder builderSingle = new AlertDialog.Builder(ChooseModeActivity.this);
+                        final AlertDialog.Builder builderSingle = new AlertDialog.Builder(ChooseModeActivity.this);
                         builderSingle.setTitle("Wähle eine Vorlesung der du beitreten möchtest");
                         final ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(ChooseModeActivity.this,
                                 android.R.layout.select_dialog_singlechoice);
@@ -176,7 +176,6 @@ public class ChooseModeActivity extends Activity {
                         builderSingle.setCancelable(true);
                         builderSingle.setNegativeButton("Abbrechen",
                                 new DialogInterface.OnClickListener() {
-
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
@@ -186,8 +185,8 @@ public class ChooseModeActivity extends Activity {
                         builderSingle.setAdapter(listAdapter, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //ToDo neuen score für getippte lecture anlegen
-                                //
+                                //ToDo lectureID abfragen und neuen score erstellen
+                                String chosenLecture = listAdapter.getItem(which).toString();
                                 Intent intent = new Intent(ChooseModeActivity.this, ChooseModeActivity.class);
                                 startActivity(intent);
 
@@ -235,15 +234,13 @@ public class ChooseModeActivity extends Activity {
                     case 0: {
                         Intent gap_question = new Intent(ChooseModeActivity.this, Add_Gap_Question_Activity.class);
                         startActivity(gap_question);
-                        finish();
-                        //mMediaPlayer.stop();
+                        mMediaPlayer.stop();
                         break;
                     }
                     case 1: {
                         Intent normal_question = new Intent(ChooseModeActivity.this, Add_Normal_Question_Activity.class);
                         startActivity(normal_question);
-                        finish();
-                        //mMediaPlayer.stop();
+                        mMediaPlayer.stop();
                         break;
                     }
                     default: {
@@ -259,6 +256,7 @@ public class ChooseModeActivity extends Activity {
             public void onClick(View v) {
                 Intent startPlay = new Intent(ChooseModeActivity.this, QuestionModePigActivity.class);
                 startActivity(startPlay);
+                mMediaPlayer.stop();
             }
         });
     }
@@ -282,12 +280,17 @@ public class ChooseModeActivity extends Activity {
 
     }
 
-   /* @Override
+    @Override
     public void onRestart() {
         super.onRestart();
-        /*mMediaPlayer = MediaPlayer.create(this, R.raw.bird);
+        mMediaPlayer = MediaPlayer.create(this, R.raw.bird);
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setLooping(true);
         mMediaPlayer.start();
-    } */
+    }
+
+    @Override
+    public void onDestroy() {
+        mMediaPlayer.stop();
+    }
 }

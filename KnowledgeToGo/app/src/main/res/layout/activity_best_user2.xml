@@ -42,14 +42,48 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp" />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/bestUser"
-        android:id="@+id/bestUserList"
-        android:layout_alignLeft="@+id/crown"
-        android:layout_alignStart="@+id/crown">
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/second"
+        android:textColor="#ffd4d1cd"
+        android:textStyle="bold"
+        android:layout_alignTop="@+id/crown_silver"
+        android:layout_alignLeft="@+id/bestUser"
+        android:layout_alignStart="@+id/bestUser"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/third"
+        android:textStyle="bold"
+        android:textColor="#c0e35836"
+        android:layout_alignTop="@+id/crown_bronze"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@+id/bestUser"
+        android:layout_alignStart="@+id/bestUser"
+        android:layout_marginTop="10dp" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/crown_silver"
+        android:layout_below="@id/crown"
+        android:layout_toLeftOf="@+id/bestUser"
+        android:layout_toStartOf="@+id/bestUser" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/crown_bronze"
+        android:layout_below="@+id/crown_silver"
+        android:layout_toLeftOf="@+id/bestUser"
+        android:layout_toStartOf="@+id/bestUser" />
 
 </RelativeLayout>
