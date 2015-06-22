@@ -152,11 +152,13 @@ public class Pig {
         }
     }
 
-    public void fail(double delay, double now){
-        mFailing = true;
-        mActionDuration = 1000;
-        mActionAt = now + delay;
-        mActionTime = 0;
+    public void fail(double delay, double now, double duration){
+        if (!mFailing) {
+            mFailing = true;
+            mActionDuration = duration;
+            mActionAt = now + delay;
+            mActionTime = 0;
+        }
     }
 
     /**

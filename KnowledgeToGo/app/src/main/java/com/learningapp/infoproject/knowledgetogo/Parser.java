@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -34,7 +35,7 @@ public class Parser {
      * Creates the text.
      * @param s String to parse
      * @param layout Layout to add to.
-     * @param context Context off the app.
+     * @param context Context of the app.
      * @return
      */
     public static void createText(String s, ViewGroup layout, Context context){
@@ -44,6 +45,46 @@ public class Parser {
             TextView text = new TextView(context);
             text.setText(elements.get(i));
             text.setPadding(TEXT_PADDING, TEXT_PADDING, TEXT_PADDING, TEXT_PADDING);
+            layout.addView(text);
+        }
+    }
+
+    /**
+     * Creates the notes.
+     * @param s String to parse
+     * @param layout Layout to add to.
+     * @param context Context of the app.
+     * @return
+     */
+    public static void createNotesText(String s, FlowLayout layout, Context context) {
+        ArrayList<EditText> editTextList = new ArrayList<>();
+
+        ArrayList<String> elements = getTextElements(s);
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        int start = getStartElement(s);
+        for (int i = 0; i < start; i++) {
+            TextView heading = new TextView(context);
+            heading.setText(elements.get(i));
+            heading.setHeight(TEXT_HEIGHT);
+            heading.setTextSize(TEXT_VIEW_SIZE);
+            heading.setPadding(TEXT_PADDING,TEXT_PADDING,TEXT_PADDING,TEXT_PADDING);
+            layout.addView(heading);
+        }
+
+        for (int i = start; i < elements.size(); i++) {
+            TextView text = new TextView(context);
+            text.setText(elements.get(i));
+            text.setHeight(TEXT_HEIGHT);
+            text.setTextSize(EDIT_TEXT_SIZE);
+            text.setWidth(width - 40);
+            text.setPadding(20,TEXT_PADDING,TEXT_PADDING,10);
+            text.setTextColor(Color.BLACK);
             layout.addView(text);
         }
     }

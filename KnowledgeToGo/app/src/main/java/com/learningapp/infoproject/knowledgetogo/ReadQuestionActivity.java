@@ -114,7 +114,7 @@ public class ReadQuestionActivity extends Activity {
                 Parser.createText(downloadedText, layout, this);
                 break;
             case DBVars.QUESTION_TYPE_NOTES:
-
+                Parser.createNotesText(downloadedText, layout, this);
                 break;
         }
     }

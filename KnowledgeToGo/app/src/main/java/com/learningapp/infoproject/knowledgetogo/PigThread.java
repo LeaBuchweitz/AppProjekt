@@ -51,11 +51,26 @@ class PigThread extends Thread {
     // Heart
     private Drawable mHeart;
 
+    // Sky
+    private Bitmap mSky;
+
     // Background
     private Bitmap mBackgroundImage;
     private int mBackgroundImageX;
     private int mBackgroundImageY;
     private int mBackgroundImageWidth;
+
+    // Huegel
+    private Bitmap mBackground1;
+    private int mBackground1X;
+    private int mBackground1Y;
+    private int mBackground1Width;
+
+    // Mountains
+    private Bitmap mBackground2;
+    private int mBackground2X;
+    private int mBackground2Y;
+    private int mBackground2Width;
 
     // Stone
     private Bitmap mStone;
@@ -80,8 +95,13 @@ class PigThread extends Thread {
 
         mResources = context.getResources();
         mStone = BitmapFactory.decodeResource(mResources, R.drawable.stone);
+        mSky = BitmapFactory.decodeResource(mResources, R.drawable.sky);
         mBackgroundImage = BitmapFactory.decodeResource(mResources,
                 R.drawable.boom2);
+        mBackground1 = BitmapFactory.decodeResource(mResources,
+                R.drawable.huegel);
+        mBackground2 = BitmapFactory.decodeResource(mResources,
+                R.drawable.berge);
         mHeart = mResources.getDrawable(R.drawable.heart);
     }
 
@@ -97,11 +117,19 @@ class PigThread extends Thread {
             mIsRunning = true;
 
             mStoneX = mCanvasWidth + 1;
-            mStoneY = 90;
+            mStoneY = 130;
             mFailing = false;
 
             mBackgroundImageX = 0;
             mBackgroundImageY = 0;
+
+            mBackground1X = 0;
+            mBackground1Y = 20;
+            mBackground1Width = mBackground1.getWidth();
+
+            mBackground2X = 0;
+            mBackground2Y = 80;
+            mBackground2Width = mBackground2.getWidth();
 
             pig = new Pig(mResources, mCanvasHeight, mCanvasWidth);
 
@@ -179,10 +207,11 @@ class PigThread extends Thread {
         pig.update(now);
 
         if (mFailing) {
-            if (mActionBegin + 2000 > now) {
-                mStoneX = mStoneX - (int) Math.round(mSpeed * 2.3 * elapsed);
+            if (mStoneX > mCanvasWidth/2 + 35) {
+                mStoneX = mStoneX - (int) Math.round(mSpeed * 3 * elapsed);
             } else if (mActionBegin + 3000 > now) {
                 mSpeed = 0;
+                pig.fail(0, System.currentTimeMillis(), mActionBegin + 3000 - now);
             } else {
                 mSpeed = 100;
                 mFailing = false;
@@ -203,6 +232,14 @@ class PigThread extends Thread {
                 mBackgroundImageX - (int) Math.round(mSpeed * elapsed) :
                 mBackgroundImageWidth;
 
+        mBackground1X = mBackground1X + mBackground1Width > 0 ?
+                mBackground1X - (int) Math.round(mSpeed * 0.5 * elapsed) :
+                mBackground1Width;
+
+        mBackground2X = mBackground2X + mBackground2Width > 0 ?
+                mBackground2X - (int) Math.round(mSpeed * 0.3 * elapsed) :
+                mBackground2Width;
+
         mLastTime = now;
     }
 
@@ -212,7 +249,21 @@ class PigThread extends Thread {
     private void doDraw(Canvas canvas) {
         // Draw the background image. Operations on the Canvas accumulate
         // so this is like clearing the screen.
-        canvas.drawColor(Color.rgb(160,170,240));
+        canvas.drawBitmap(mSky, 0, 0, null);
+
+        canvas.drawBitmap(mBackground2, mBackground2X, mBackground2Y, null);
+        canvas.drawBitmap(mBackground2,
+                mBackground2X < 0 ?
+                        mBackground2X + mBackground2Width :
+                        mBackground2X - mBackground2Width
+                , mBackground2Y, null);
+
+        canvas.drawBitmap(mBackground1, mBackground1X, mBackground1Y, null);
+        canvas.drawBitmap(mBackground1,
+                mBackground1X < 0 ?
+                        mBackground1X + mBackground1Width :
+                        mBackground1X - mBackground1Width
+                , mBackground1Y, null);
 
         canvas.drawBitmap(mBackgroundImage, mBackgroundImageX, mBackgroundImageY, null);
         canvas.drawBitmap(mBackgroundImage,
@@ -274,15 +325,18 @@ class PigThread extends Thread {
     }
 
     public void pigJump(){
-        mJumping = true;
-        mActionBegin = System.currentTimeMillis();
-        pig.jump(2000,1000,System.currentTimeMillis());
+        if (!mFailing && !mJumping) {
+            mJumping = true;
+            mActionBegin = System.currentTimeMillis();
+            pig.jump(2000, 1000, System.currentTimeMillis());
+        }
     }
 
     public void pigFail(){
-        mFailing = true;
-        mActionBegin = System.currentTimeMillis();
-        pig.fail(2000, System.currentTimeMillis());
+        if (!mFailing && !mJumping) {
+            mFailing = true;
+            mActionBegin = System.currentTimeMillis();
+        }
         mLifes--;
     }
 
