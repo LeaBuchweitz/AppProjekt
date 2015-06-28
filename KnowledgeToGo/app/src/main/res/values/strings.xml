@@ -42,7 +42,8 @@
     <string name="add_answer">Gib ein Stichwort als Antwort ein</string>
     <string name="no_question_answer">Gib sowohl Frage wie auch mindestens ein Stichwort ein!</string>
     <string name="send_to_server">Abschicken</string>
-    <string name="add_gaps">Ich habe die Lücken selbst durch { } markiert</string>
+    <string name="dont_show">Diese Meldung nicht mehr anzeigen</string>
+    <string name="instruction">Bitte markiere deine Lücken beginnend mit einem { und endend mit einem }</string>
     <string name="title_activity_add__normal__question_">Stichwort-Frage hinzufügen</string>
     <string name="Upload_succesfull">Die Frage wurde hochgeladen!</string>
     <string name="already_uploaded">Du hast diese Frage bereist hochgeladen!</string>
@@ -62,7 +63,6 @@
     <string name="gapTextNotValid">Der Lückentext ist nicht korrekt! Bitte überprüfe, ob du die Klammern { und } richtig gesetzt hast. Jede Klammer muss geschlossen werden und es darf nur eine Klammer auf einmal offen sein.</string>
     <string name="title_activity_show_score">Geschafft!</string>
     <string name="title_activity_adapter_helper">AdapterHelperActivity</string>
-    <string name="hello_world">Hi</string>
     <string name="title_activity_best_user">Bestenliste</string>
 
 
