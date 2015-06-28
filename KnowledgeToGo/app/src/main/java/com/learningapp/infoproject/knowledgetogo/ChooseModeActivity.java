@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -41,6 +42,9 @@ public class ChooseModeActivity extends Activity {
     private ArrayList<String> lectures = new ArrayList<String>();
     private ArrayList<Integer> lectureID = new ArrayList<Integer>();
     private MediaPlayer mMediaPlayer = new MediaPlayer();
+    private SharedPreferences.Editor editor;
+    private SharedPreferences prefs;
+    private int i;
 
     private int uid;
     private int lid;
@@ -63,7 +67,7 @@ public class ChooseModeActivity extends Activity {
         lecture_menu = (ListView) findViewById(R.id.lecture_menu);
 
         // Get Info from SharedPreferences for User-ID
-        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+        prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
         uid = prefs.getInt("User-ID", 0);
 
         // Bird sound in background
@@ -110,13 +114,12 @@ public class ChooseModeActivity extends Activity {
         lecture_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedLecture = (String) lecture_menu.getItemAtPosition(position);
+                final String selectedLecture = (String) lecture_menu.getItemAtPosition(position);
 
                 switch (position) {
                     case 0: {
                         // Delete User-ID from Shared Preferences
-                        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = prefs.edit();
+                        prefs.edit();
                         editor.remove("User-ID");
                         editor.apply();
 
@@ -185,20 +188,82 @@ public class ChooseModeActivity extends Activity {
                         builderSingle.setAdapter(listAdapter, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //ToDo lectureID abfragen und neuen score erstellen
-                                String chosenLecture = listAdapter.getItem(which).toString();
-                                Intent intent = new Intent(ChooseModeActivity.this, ChooseModeActivity.class);
-                                startActivity(intent);
+                                // Get lecture-ID and set a new score for the chosen lecture
+                                String newLecture = listAdapter.getItem(which);
+                                ArrayList<Integer> lID = new ArrayList<Integer>();
+                                DatabaseController db = new DatabaseController(DBVars.REQUEST_GET_LECTURE_ID,
+                                        "http://android.getenv.net/?mod=Lecture&fun=lectureID&name="+newLecture, lID , uid);
+                                db.start();
+                                drawer.closeDrawers();
+                                while (db.isAlive());
+                                Toast.makeText(ChooseModeActivity.this, "Du hast dich für "+newLecture+" registriert!", Toast.LENGTH_LONG).show();
 
+                                // Set LID
+                                lid = lID.get(0);
+                                lectures.removeAll(lectures);
+                                updateDrawer();
                             }
                         });
                         builderSingle.create().show();
+                        break;
                     }
-                    default: { //ToDo alle ID's für VOrlesungen abfragen
-                        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putInt("User-ID", lid);
-                        editor.apply();
+                    default: {
+                        // Delete all scores from User
+                        if(selectedLecture.equals("Zurücksetzen")) {
+                            AlertDialog.Builder deleteAll = new AlertDialog.Builder(ChooseModeActivity.this);
+                            deleteAll.setTitle("Bist du sicher?");
+                            deleteAll.setMessage("Es werden alle Einstellungen zurück gesetzt und alle Scores gelöscht!");
+                            deleteAll.setCancelable(true);
+                            deleteAll.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            deleteAll.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    boolean t = prefs.getBoolean("Instruction",true);
+                                    if(!t) {
+                                        editor.remove("Instruction").apply();
+                                    }
+                                    DatabaseController db = new DatabaseController(DBVars.REQUEST_DELETE_SCORES,
+                                            "http://android.getenv.net/?mod=User&fun=deleteScores&uid="+LoginBeginActivity.userID);
+                                    db.start();
+                                    drawer.closeDrawers();
+                                    while (db.isAlive());
+                                    Toast.makeText(ChooseModeActivity.this, R.string.deleted, Toast.LENGTH_LONG).show();
+                                    lectures.removeAll(lectures);
+                                    updateDrawer();
+                                }
+                            });
+                            deleteAll.create().show();
+                        } else {
+                            ArrayList<Integer> lID = new ArrayList<Integer>();
+                            DatabaseController db = new DatabaseController(DBVars.REQUEST_GET_LECTURE_ID,
+                                    "http://android.getenv.net/?mod=Lecture&fun=lectureID&name=" + selectedLecture, lID, uid);
+                            db.start();
+                            drawer.closeDrawers();
+                            while (db.isAlive()) ;
+                            lid = lID.get(0);
+
+                            //lectures.removeAll(lectures);
+                            //updateDrawer();
+                            /*for(i = 0; i<lectures.size(); i++) {
+                                if(lectures.get(i).equals(selectedLecture)) {
+                                    View v = adapter.getView(i, view, parent);
+                                    TextView line = (TextView) v.findViewById(R.id.menu_item);
+                                    line.setTextColor(Color.parseColor("#FF8FEBFF"));
+                                    break;
+                                }
+                            }*/
+                            //prefs.edit();
+                            //editor.putInt("Lecture-ID", lid);
+                            //editor.remove("Selected-Lecture");
+                            //editor.putInt("Selected-Lecture", i);
+                            //editor.putString("Color-Selection", "#FF8FEBFF");
+                            //editor.apply();
+                        }
                         break;
                     }
                 }
@@ -275,11 +340,20 @@ public class ChooseModeActivity extends Activity {
                 "http://android.getenv.net/?mod=User&fun=getLectures&uid=" + uid, lectures, lectureID);
         db.start();
         while (db.isAlive()) ;
+        lectures.add("Zurücksetzen");
 
-        //lecture_menu.setAdapter(adapter);
+        // Set Color to the selected Lecture
+        //prefs.edit();
+        /*int i = prefs.getInt("Selected-Lecture",-1);
+        if(!(i == -1)) {
+            View v = lecture_menu.getAdapter().getView(i,null,lecture_menu);
+            TextView line = (TextView) v.findViewById(R.id.menu_item);
+            line.setTextColor(Color.parseColor("#FF8FEBFF"));
+        }*/
 
     }
 
+    // Restart of the sound of birds
     @Override
     public void onRestart() {
         super.onRestart();
@@ -289,8 +363,10 @@ public class ChooseModeActivity extends Activity {
         mMediaPlayer.start();
     }
 
+    // Stop bird sound when user logs out
     @Override
     public void onDestroy() {
+        super.onDestroy();
         mMediaPlayer.stop();
     }
 }

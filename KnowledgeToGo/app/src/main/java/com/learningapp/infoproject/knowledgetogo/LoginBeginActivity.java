@@ -178,7 +178,7 @@ public class LoginBeginActivity extends Activity {
     }
 
     private String pass;
-    public String userID;
+    public static String userID;
     private String infoFromServer;
 
     //sets up new handler

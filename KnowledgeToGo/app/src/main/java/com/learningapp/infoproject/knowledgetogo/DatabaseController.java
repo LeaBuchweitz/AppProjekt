@@ -2,6 +2,7 @@ package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
@@ -29,8 +30,9 @@ public class DatabaseController extends Thread {
     private int requestType;
     private String lecture;
     private int userID;
+    private int lectureID;
 
-    public DatabaseController(int requestType, String url, ArrayList<String> content, ArrayList<Integer> type, ArrayList<Integer> id){
+    public DatabaseController(int requestType, String url, ArrayList<String> content, ArrayList<Integer> type, ArrayList<Integer> id) {
         this.url = url;
         this.content = content;
         this.type = type;
@@ -38,27 +40,40 @@ public class DatabaseController extends Thread {
         this.requestType = requestType;
     }
 
-    public DatabaseController(int requestType, String url, ArrayList<String> string, ArrayList<Integer> integer){
+    public DatabaseController(int requestType, String url, ArrayList<String> string, ArrayList<Integer> integer) {
         this.url = url;
         this.content = string;
         this.type = integer;
         this.requestType = requestType;
     }
 
-    public DatabaseController (int requestType, String url, String lecture, int userID) {
+    public DatabaseController(int requestType, String url, String lecture, int userID) {
         this.userID = userID;
         this.lecture = lecture;
         this.url = url;
         this.requestType = requestType;
     }
 
-    public DatabaseController (int requestType, String url, String lecture) {
+    public DatabaseController(int requestType, String url, String lecture) {
         this.lecture = lecture;
         this.url = url;
         this.requestType = requestType;
     }
 
-    public DatabaseController (int requestType, String url) {
+    public DatabaseController(int requestType, String url) {
+        this.url = url;
+        this.requestType = requestType;
+    }
+
+    public DatabaseController(int requestType, String url, int userID) {
+        this.userID = userID;
+        this.url = url;
+        this.requestType = requestType;
+    }
+
+    public DatabaseController(int requestType, String url, ArrayList<Integer> id, int userID) {
+        this.id = id;
+        this.userID = userID;
         this.url = url;
         this.requestType = requestType;
     }
@@ -66,6 +81,8 @@ public class DatabaseController extends Thread {
     @Override
     public void run() {
         URL request;
+
+        StringBuilder responseData = new StringBuilder(1024);
 
         try {
             BufferedReader getData;
@@ -77,13 +94,12 @@ public class DatabaseController extends Thread {
             getData = new BufferedReader(new InputStreamReader(sendInfo.getInputStream()));
 
             // Put 'endless' line of data into a readable portion
-            StringBuilder responseData = new StringBuilder(1024);
+            //StringBuilder responseData = new StringBuilder(1024);
             String tmp = "";
-            while((tmp = getData.readLine()) != null) {
+            while ((tmp = getData.readLine()) != null) {
                 responseData.append(tmp);
             }
             getData.close();
-
 
             try {
                 JSONObject jO;
@@ -118,19 +134,36 @@ public class DatabaseController extends Thread {
                             jO = download.getJSONObject(i);
                             success = jO.getString("LName");
                         }
-                        if(success.equals(lecture)) {
+                        if (success.equals(lecture)) {
                             Log.i("lecture", "Vorlesung hochgeladen");
                         }
                         break;
                     case DBVars.REQUEST_ALREADY_THERE:
-                        if(new String (responseData).equals("[null]")) {
+                        if (new String(responseData).equals("[null]")) {
                             new DatabaseController(DBVars.REQUEST_NEW_LECTURE,
-                                    "http://android.getenv.net/?mod=Lecture&fun=insertLecture&name="+lecture+"&uid="+userID, lecture).start();
+                                    "http://android.getenv.net/?mod=Lecture&fun=insertLecture&name=" + lecture + "&uid=" + userID, lecture).start();
                         } else {
                             Log.i("lecture", "Vorlesung gibts schon!");
                         }
                         break;
-                    case DBVars.REQUEST_UPLOAD_SCORE:
+                    case DBVars.REQUEST_DELETE_SCORES:
+                        if (new String(responseData).equals("true")) {
+                            // ToDo nachricht einblenden?!
+                            Log.i("score", "Alle scores gelöscht");
+                        }
+                        break;
+                    case DBVars.REQUEST_GET_LECTURE_ID:
+                        int lectureId = 0;
+                        for (int i = 0; i < download.length(); i++) {
+                            jO = download.getJSONObject(i);
+                            lectureId = jO.getInt("LID");
+                            id.add(jO.getInt("LID"));
+                        }
+
+                        // Add a new Score to a Lecture
+                        DatabaseController db = new DatabaseController(DBVars.REQUEST_SET_NEW_SCORE,
+                                "http://android.getenv.net/?mod=User&fun=addLecture&uid=" + userID + "&lid=" + lectureId);
+                        db.start();
                         break;
                 }
 
@@ -142,6 +175,22 @@ public class DatabaseController extends Thread {
 
         } catch (IOException e) {
             e.printStackTrace();
+
+            if (new String(responseData).equals("true")) {
+                switch (requestType) {
+                    case DBVars.REQUEST_DELETE_SCORES:
+                        if (new String(responseData).equals("true")) {
+                            // ToDo nachricht einblenden?!
+                            Log.i("score", "Alle scores gelöscht");
+                        }
+                        break;
+                    case DBVars.REQUEST_SET_NEW_SCORE:
+                        // ToDo nachricht einblenden?!
+                        Log.i("Score", "Hast jetzt einen Score!");
+                        break;
+                }
+            }
+
         }
     }
 }

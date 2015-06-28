@@ -24,6 +24,8 @@
     <!-- New Lecture -->
     <string name="new_lecture">Vorlesung wurde erfolgreich eingetragen!</string>
     <string name="already_exists">Die Vorlesung existiert schon!</string>
+    <string name="deleted">Alle deine Scores wurden gelöscht!</string>
+
 
     <!-- Choose mode of learning  -->
     <string name="choose_mode">Wähle deinen Lernmodus</string>
