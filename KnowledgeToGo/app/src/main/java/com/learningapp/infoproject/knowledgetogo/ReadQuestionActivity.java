@@ -1,7 +1,11 @@
 package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -35,7 +39,9 @@ public class ReadQuestionActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_question);
 
-        lectureID = 1;
+        // Get Lecture-ID from selected lecture
+        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+        lectureID = prefs.getInt("Lecture-ID", -1);
 
         // Check display size for the correct background
         RelativeLayout background = (RelativeLayout) findViewById(R.id.background);
@@ -55,12 +61,12 @@ public class ReadQuestionActivity extends Activity {
         questionType = new ArrayList<>();
         questionID = new ArrayList<>();
 
-        // Make download request for questions. The result is saved into the given ArrayLists
-        DatabaseController db = new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
-                "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid="+Integer.toString(lectureID),
-                questionContent, questionType, questionID);
-        db.start();
-        while(db.isAlive());
+            // Make download request for questions. The result is saved into the given ArrayLists
+            DatabaseController db = new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
+                    "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid=" + Integer.toString(lectureID),
+                    questionContent, questionType, questionID);
+            db.start();
+            while (db.isAlive()) ;
 
         layout = (FlowLayout) findViewById(R.id.flow_layout);
 

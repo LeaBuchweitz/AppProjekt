@@ -19,6 +19,7 @@ public final class DBVars {
     public static final int REQUEST_DELETE_SCORES = 8;
     public static final int REQUEST_SET_NEW_SCORE = 9;
     public static final int REQUEST_GET_LECTURE_ID = 10;
+    public static final int REQUEST_INSERT_SCORE = 11;
 
     public static String SESSION_COOKIE = null;
 

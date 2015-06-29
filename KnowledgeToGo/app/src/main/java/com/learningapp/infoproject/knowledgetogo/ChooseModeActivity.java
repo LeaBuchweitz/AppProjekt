@@ -42,9 +42,6 @@ public class ChooseModeActivity extends Activity {
     private ArrayList<String> lectures = new ArrayList<String>();
     private ArrayList<Integer> lectureID = new ArrayList<Integer>();
     private MediaPlayer mMediaPlayer = new MediaPlayer();
-    private SharedPreferences.Editor editor;
-    private SharedPreferences prefs;
-    private int i;
 
     private int uid;
     private int lid;
@@ -67,7 +64,8 @@ public class ChooseModeActivity extends Activity {
         lecture_menu = (ListView) findViewById(R.id.lecture_menu);
 
         // Get Info from SharedPreferences for User-ID
-        prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+        lid = prefs.getInt("Lecture-ID", -1);
         uid = prefs.getInt("User-ID", 0);
 
         // Bird sound in background
@@ -93,6 +91,16 @@ public class ChooseModeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 drawer.openDrawer(Gravity.START);
+
+                SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+                int pos = prefs.getInt("Selected-Lecture", 0);
+                if(pos != 0) {
+                    // Set color to selected lecture
+                    View view = lecture_menu.getChildAt(pos);
+                    TextView line = (TextView) view.findViewById(R.id.menu_item);
+                    line.setTextColor(Color.parseColor("#FF8FEBFF"));
+                }
+
             }
         });
 
@@ -100,14 +108,30 @@ public class ChooseModeActivity extends Activity {
         read.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent readQquestion = new Intent(ChooseModeActivity.this, ReadQuestionActivity.class);
-                startActivity(readQquestion);
-                mMediaPlayer.stop();
+                // If no lecture is selected
+                if(lid == -1) {
+                    AlertDialog.Builder noSelectedLecture = new AlertDialog.Builder(ChooseModeActivity.this);
+                    noSelectedLecture.setTitle("Keine Vorlesung gewählt!");
+                    noSelectedLecture.setMessage("Bitte wähle in deinem Vorlesungsmenü eine Vorlesung aus!");
+                    noSelectedLecture.setCancelable(true);
+                    noSelectedLecture.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    noSelectedLecture.create().show();
+                } else {
+                    Intent readQquestion = new Intent(ChooseModeActivity.this, ReadQuestionActivity.class);
+                    startActivity(readQquestion);
+                    mMediaPlayer.stop();
+                }
             }
         });
 
         adapter = new ArrayAdapter<String>(this, R.layout.one_lecture_line, lectures);
         updateDrawer();
+
         lecture_menu.setAdapter(adapter);
 
         // Add ClickListener to enter a special lecture
@@ -116,10 +140,12 @@ public class ChooseModeActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final String selectedLecture = (String) lecture_menu.getItemAtPosition(position);
 
+                SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+
                 switch (position) {
                     case 0: {
                         // Delete User-ID from Shared Preferences
-                        prefs.edit();
+                        SharedPreferences.Editor editor = prefs.edit();
                         editor.remove("User-ID");
                         editor.apply();
 
@@ -191,7 +217,7 @@ public class ChooseModeActivity extends Activity {
                                 // Get lecture-ID and set a new score for the chosen lecture
                                 String newLecture = listAdapter.getItem(which);
                                 ArrayList<Integer> lID = new ArrayList<Integer>();
-                                DatabaseController db = new DatabaseController(DBVars.REQUEST_GET_LECTURE_ID,
+                                DatabaseController db = new DatabaseController(DBVars.REQUEST_INSERT_SCORE,
                                         "http://android.getenv.net/?mod=Lecture&fun=lectureID&name="+newLecture, lID , uid);
                                 db.start();
                                 drawer.closeDrawers();
@@ -223,9 +249,13 @@ public class ChooseModeActivity extends Activity {
                             deleteAll.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = prefs.edit();
                                     boolean t = prefs.getBoolean("Instruction",true);
                                     if(!t) {
-                                        editor.remove("Instruction").apply();
+                                        editor.remove("Instruction");
+                                        editor.remove("Selected-Lecture");
+                                        editor.apply();
                                     }
                                     DatabaseController db = new DatabaseController(DBVars.REQUEST_DELETE_SCORES,
                                             "http://android.getenv.net/?mod=User&fun=deleteScores&uid="+LoginBeginActivity.userID);
@@ -247,22 +277,19 @@ public class ChooseModeActivity extends Activity {
                             while (db.isAlive()) ;
                             lid = lID.get(0);
 
-                            //lectures.removeAll(lectures);
-                            //updateDrawer();
-                            /*for(i = 0; i<lectures.size(); i++) {
-                                if(lectures.get(i).equals(selectedLecture)) {
-                                    View v = adapter.getView(i, view, parent);
-                                    TextView line = (TextView) v.findViewById(R.id.menu_item);
-                                    line.setTextColor(Color.parseColor("#FF8FEBFF"));
-                                    break;
-                                }
-                            }*/
-                            //prefs.edit();
-                            //editor.putInt("Lecture-ID", lid);
-                            //editor.remove("Selected-Lecture");
-                            //editor.putInt("Selected-Lecture", i);
-                            //editor.putString("Color-Selection", "#FF8FEBFF");
-                            //editor.apply();
+                            // Set color to selected lecture
+                            View v = lecture_menu.getChildAt(position);
+                            TextView line = (TextView) v.findViewById(R.id.menu_item);
+                            line.setTextColor(Color.parseColor("#FF8FEBFF"));
+
+                            SharedPreferences.Editor editor = prefs.edit();
+                            int posit = prefs.getInt("Selected-Lecture", -1);
+                            editor.putInt("Lecture-ID", lid);
+                            if (posit != 0) {
+                                editor.remove("Selected-Lecture");
+                            }
+                            editor.putInt("Selected-Lecture", posit);
+                            editor.apply();
                         }
                         break;
                     }
@@ -297,16 +324,46 @@ public class ChooseModeActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0: {
-                        Intent gap_question = new Intent(ChooseModeActivity.this, Add_Gap_Question_Activity.class);
-                        startActivity(gap_question);
-                        mMediaPlayer.stop();
-                        break;
+                        // If no lecture is selected
+                        if(lid == -1) {
+                            AlertDialog.Builder noSelectedLecture = new AlertDialog.Builder(ChooseModeActivity.this);
+                            noSelectedLecture.setTitle("Keine Vorlesung gewählt!");
+                            noSelectedLecture.setMessage("Bitte wähle in deinem Vorlesungsmenü eine Vorlesung aus!");
+                            noSelectedLecture.setCancelable(true);
+                            noSelectedLecture.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            noSelectedLecture.create().show();
+                        } else {
+                            Intent gap_question = new Intent(ChooseModeActivity.this, Add_Gap_Question_Activity.class);
+                            startActivity(gap_question);
+                            mMediaPlayer.stop();
+                            break;
+                        }
                     }
                     case 1: {
-                        Intent normal_question = new Intent(ChooseModeActivity.this, Add_Normal_Question_Activity.class);
-                        startActivity(normal_question);
-                        mMediaPlayer.stop();
-                        break;
+                        // If no lecture is selected
+                        if(lid == -1) {
+                            AlertDialog.Builder noSelectedLecture = new AlertDialog.Builder(ChooseModeActivity.this);
+                            noSelectedLecture.setTitle("Keine Vorlesung gewählt!");
+                            noSelectedLecture.setMessage("Bitte wähle in deinem Vorlesungsmenü eine Vorlesung aus!");
+                            noSelectedLecture.setCancelable(true);
+                            noSelectedLecture.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            noSelectedLecture.create().show();
+                        } else {
+                            Intent normal_question = new Intent(ChooseModeActivity.this, Add_Normal_Question_Activity.class);
+                            startActivity(normal_question);
+                            mMediaPlayer.stop();
+                            break;
+                        }
                     }
                     default: {
                         break;
@@ -319,9 +376,24 @@ public class ChooseModeActivity extends Activity {
         examMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent startPlay = new Intent(ChooseModeActivity.this, QuestionModePigActivity.class);
-                startActivity(startPlay);
-                mMediaPlayer.stop();
+                // If no lecture is selected
+                if(lid == -1) {
+                    AlertDialog.Builder noSelectedLecture = new AlertDialog.Builder(ChooseModeActivity.this);
+                    noSelectedLecture.setTitle("Keine Vorlesung gewählt!");
+                    noSelectedLecture.setMessage("Bitte wähle in deinem Vorlesungsmenü eine Vorlesung aus!");
+                    noSelectedLecture.setCancelable(true);
+                    noSelectedLecture.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    noSelectedLecture.create().show();
+                } else {
+                    Intent startPlay = new Intent(ChooseModeActivity.this, QuestionModePigActivity.class);
+                    startActivity(startPlay);
+                    mMediaPlayer.stop();
+                }
             }
         });
     }
@@ -342,14 +414,7 @@ public class ChooseModeActivity extends Activity {
         while (db.isAlive()) ;
         lectures.add("Zurücksetzen");
 
-        // Set Color to the selected Lecture
-        //prefs.edit();
-        /*int i = prefs.getInt("Selected-Lecture",-1);
-        if(!(i == -1)) {
-            View v = lecture_menu.getAdapter().getView(i,null,lecture_menu);
-            TextView line = (TextView) v.findViewById(R.id.menu_item);
-            line.setTextColor(Color.parseColor("#FF8FEBFF"));
-        }*/
+
 
     }
 

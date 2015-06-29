@@ -1,7 +1,11 @@
 package com.learningapp.infoproject.knowledgetogo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -44,7 +48,9 @@ public class QuestionModePigActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        lectureID = 1;
+        // Get Lecture-ID from selected lecture
+        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+        lectureID = prefs.getInt("Lecture-ID", -1);
 
         questionCounter = 0;
         questionContent = new ArrayList<>();
@@ -53,7 +59,7 @@ public class QuestionModePigActivity extends Activity {
 
         // Make download request for questions. The result is saved into the given ArrayLists
         db = new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
-                "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid="+Integer.toString(lectureID),
+                "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid=" + Integer.toString(lectureID),
                 questionContent, questionType, questionID);
         db.start();
 
@@ -204,6 +210,12 @@ public class QuestionModePigActivity extends Activity {
                 animation.getThread().pigFail();
             }
         }.start();
+    }
+
+    public void onBackPressed () {
+        mMediaPlayer.stop();
+        Intent chooseMode = new Intent(QuestionModePigActivity.this, ChooseModeActivity.class);
+        startActivity(chooseMode);
     }
 
 }
