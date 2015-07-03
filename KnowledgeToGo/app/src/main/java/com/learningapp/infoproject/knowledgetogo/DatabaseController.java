@@ -152,7 +152,7 @@ public class DatabaseController extends Thread {
                             Log.i("score", "Alle scores gelöscht");
                         }
                         break;
-                    case DBVars.REQUEST_GET_LECTURE_ID:
+                    case DBVars.REQUEST_INSERT_SCORE:
                         int lectureId = 0;
                         for (int i = 0; i < download.length(); i++) {
                             jO = download.getJSONObject(i);
@@ -165,6 +165,14 @@ public class DatabaseController extends Thread {
                                 "http://android.getenv.net/?mod=User&fun=addLecture&uid=" + userID + "&lid=" + lectureId);
                         db.start();
                         break;
+                    case DBVars.REQUEST_GET_LECTURE_ID:
+                        int lId = 0;
+                        for (int i = 0; i < download.length(); i++) {
+                            jO = download.getJSONObject(i);
+                            lId = jO.getInt("LID");
+                            id.add(jO.getInt("LID"));
+                        }
+
                 }
 
             } catch (JSONException e) {
