@@ -22,6 +22,7 @@ public class QuestionModePigActivity extends Activity {
     private CountDownTimer countDownTimer;
 
     private FlowLayout layout;
+    private Button button;
     private SurfaceAnimation animation;
     private ArrayList<EditText> editTextList;
 
@@ -69,6 +70,8 @@ public class QuestionModePigActivity extends Activity {
 
         layout = (FlowLayout) findViewById(R.id.flow_layout);
         animation = (SurfaceAnimation) findViewById(R.id.surfaceDrawing);
+        button = (Button) findViewById(R.id.button_send);
+        button.setText(R.string.button_wait);
 
         modeIsSend = true;
         startTask();
@@ -80,6 +83,7 @@ public class QuestionModePigActivity extends Activity {
     private void startTask() {
         modeIsSend = true;
         while (db.isAlive());
+        button.setText(R.string.button_start);
         mMediaPlayer.start();
         questionTask();
     }
@@ -109,6 +113,7 @@ public class QuestionModePigActivity extends Activity {
      * Creates new question
      */
     public void questionTask(){
+        button.setText(R.string.button_send);
         layout.removeAllViews();
         downloadedText = questionContent.get(questionCounter);
         switch(questionType.get(questionCounter)) {
@@ -128,6 +133,7 @@ public class QuestionModePigActivity extends Activity {
      * OnClick action. Checks Text.
      */
     public void answerTask() {
+
         ArrayList<String> entries = new ArrayList<>();
         for (EditText text : editTextList) {
             entries.add(text.getText().toString());
@@ -163,6 +169,8 @@ public class QuestionModePigActivity extends Activity {
         }
 
         questionCounter++;
+
+        startTimer();
     }
 
     /**
@@ -196,12 +204,21 @@ public class QuestionModePigActivity extends Activity {
 
     // Count down of 30sec
     public void startTimer() {
+        animation.getThread().resetTimer();
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
         countDownTimer = new CountDownTimer(30000, 1000) {
             public void onTick(long millisUntilFinished) {
 
             }
             public void onFinish() {
                 animation.getThread().pigFail();
+                lifes--;
+                endTask();
+                startTimer();
             }
         }.start();
     }

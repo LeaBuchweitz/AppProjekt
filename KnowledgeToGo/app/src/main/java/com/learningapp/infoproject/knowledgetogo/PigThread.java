@@ -22,6 +22,9 @@ class PigThread extends Thread {
     /* FPS */
     public static final int FPS = 8;
 
+    /* Timer */
+    private double mTimer;
+
     /** Message handler used by thread to interact with TextView */
     private Handler mHandler;
     /** Handle to the surface manager object we interact with */
@@ -44,6 +47,7 @@ class PigThread extends Thread {
     private int mCanvasHeight;
 
     private TextPaint mBlack;
+    private TextPaint mWhite;
 
     /* Resources */
     private Resources mResources;
@@ -53,6 +57,11 @@ class PigThread extends Thread {
 
     // Sky
     private Bitmap mSky;
+
+    // Clouds
+    private Bitmap mClouds;
+    private int mCloudsX;
+    private int mCloudsY;
 
     // Background
     private Bitmap mBackgroundImage;
@@ -71,6 +80,13 @@ class PigThread extends Thread {
     private int mBackground2X;
     private int mBackground2Y;
     private int mBackground2Width;
+
+    // Schild
+    private Bitmap mSchild;
+
+    // Brett
+    private Bitmap mBrett;
+
 
     // Stone
     private Bitmap mStone;
@@ -96,12 +112,15 @@ class PigThread extends Thread {
         mResources = context.getResources();
         mStone = BitmapFactory.decodeResource(mResources, R.drawable.stone);
         mSky = BitmapFactory.decodeResource(mResources, R.drawable.sky);
+        mClouds = BitmapFactory.decodeResource(mResources, R.drawable.clouds);
         mBackgroundImage = BitmapFactory.decodeResource(mResources,
                 R.drawable.boom2);
         mBackground1 = BitmapFactory.decodeResource(mResources,
                 R.drawable.huegel);
         mBackground2 = BitmapFactory.decodeResource(mResources,
                 R.drawable.berge);
+        mSchild = BitmapFactory.decodeResource(mResources, R.drawable.schild);
+        mBrett = BitmapFactory.decodeResource(mResources, R.drawable.brett);
         mHeart = mResources.getDrawable(R.drawable.heart);
     }
 
@@ -119,6 +138,9 @@ class PigThread extends Thread {
             mStoneX = mCanvasWidth + 1;
             mStoneY = 130;
             mFailing = false;
+
+            mCloudsX = 500;
+            mCloudsY = 60;
 
             mBackgroundImageX = 0;
             mBackgroundImageY = 0;
@@ -140,6 +162,10 @@ class PigThread extends Thread {
             mBlack = new TextPaint();
             mBlack.setColor(Color.BLACK);
             mBlack.setTextSize(40);
+
+            mWhite = new TextPaint();
+            mWhite.setColor(Color.WHITE);
+            mWhite.setTextSize(25);
         }
     }
 
@@ -204,6 +230,8 @@ class PigThread extends Thread {
 
         double elapsed = (now - mLastTime) / 1000.0;
 
+        mTimer += elapsed;
+
         pig.update(now);
 
         if (mFailing) {
@@ -227,6 +255,10 @@ class PigThread extends Thread {
                 mStoneX = mCanvasWidth + 1;
             }
         }
+
+        mCloudsX = mCloudsX + mBackgroundImageWidth > 0 ?
+                mCloudsX - (int) Math.round(mSpeed * 0.4 * elapsed) :
+                mBackgroundImageWidth;
 
         mBackgroundImageX = mBackgroundImageX + mBackgroundImageWidth > 0 ?
                 mBackgroundImageX - (int) Math.round(mSpeed * elapsed) :
@@ -258,6 +290,9 @@ class PigThread extends Thread {
                         mBackground2X - mBackground2Width
                 , mBackground2Y, null);
 
+
+        canvas.drawBitmap(mClouds, mCloudsX, mCloudsY, null);
+
         canvas.drawBitmap(mBackground1, mBackground1X, mBackground1Y, null);
         canvas.drawBitmap(mBackground1,
                 mBackground1X < 0 ?
@@ -272,14 +307,22 @@ class PigThread extends Thread {
                         mBackgroundImageX - mBackgroundImageWidth
                 , mBackgroundImageY, null);
 
+
         canvas.drawBitmap(mStone, mStoneX, mStoneY, null);
 
         pig.draw(canvas);
 
-        canvas.drawText("Score: "+Integer.toString(mScore),10,80,mBlack);
+        if (!mJumping && !mFailing) {
+            canvas.drawBitmap(mSchild, mCanvasWidth - 160, 150, null);
+            canvas.drawText(Integer.toString(30*4-((int) Math.round(mTimer*4)))+" m", mCanvasWidth - 140, 176, mWhite);
+        }
+
+        //canvas.drawBitmap(mBrett, -2, -5, null);
+        //canvas.drawText("Score: "+Integer.toString(mScore),10,40,mWhite);
+
 
         for (int i = 0; i < mLifes; i++) {
-            mHeart.setBounds(10 + i * 40, 20, 40 + i * 40, 50 );
+            mHeart.setBounds(10 + i * 40, 15, 40 + i * 40, 45 );
             mHeart.draw(canvas);
         }
     }
@@ -330,6 +373,7 @@ class PigThread extends Thread {
             mActionBegin = System.currentTimeMillis();
             pig.jump(2000, 1000, System.currentTimeMillis());
         }
+        mTimer = 0;
     }
 
     public void pigFail(){
@@ -337,7 +381,11 @@ class PigThread extends Thread {
             mFailing = true;
             mActionBegin = System.currentTimeMillis();
         }
+        mTimer = 0;
         mLifes--;
     }
 
+    public void resetTimer() {
+        mTimer = 0;
+    }
 }

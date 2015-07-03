@@ -52,6 +52,8 @@
     <string name="atLeastOneAnswer">Du musst eine Frage und mindestens eine Antwort eingeben! Die Frage darf außerdem kein { und } enthalten und nicht mit einem Leerzeichen beginnen.</string>
 
     <!-- Question-Mode -->
+    <string name="button_wait">Warten</string>
+    <string name="button_start">Start</string>
     <string name="button_send">Check</string>
     <string name="button_next">Nächste</string>
     <string name="button_back">Zurück</string>
