@@ -89,6 +89,29 @@ public class QuestionModePigActivity extends Activity {
     private void startTask() {
         modeIsSend = true;
         while (db.isAlive());
+
+        if (questionContent.size() == 0){
+            AlertDialog.Builder noSelectedLecture = new AlertDialog.Builder(QuestionModePigActivity.this);
+            noSelectedLecture.setTitle("Die Vorlesung enthält keine Fragen!");
+            noSelectedLecture.setMessage("Erstelle doch welche.");
+            noSelectedLecture.setCancelable(false);
+            noSelectedLecture.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    mMediaPlayer.stop();
+                    Intent intent = new Intent(QuestionModePigActivity.this, ChooseModeActivity.class);
+                    startActivity(intent);
+                    if (countDownTimer != null)
+                        countDownTimer.cancel();
+                    finish();
+                }
+            });
+            noSelectedLecture.create().show();
+            questionContent.add("Keine Fragen Vorhanden.");
+            questionType.add(DBVars.QUESTION_TYPE_GAPTEXT);
+        }
+
         button.setText(R.string.button_start);
         mMediaPlayer.start();
         questionTask();
@@ -190,6 +213,8 @@ public class QuestionModePigActivity extends Activity {
             extras.putInt("Reached-Score", score);
             extras.putInt("Number-Questions", questionCounter);
             showCurrentScore.putExtras(extras);
+            if (countDownTimer != null)
+                countDownTimer.cancel();
             QuestionModePigActivity.this.startActivity(showCurrentScore);
             QuestionModePigActivity.this.finish();
             mMediaPlayer.stop();
@@ -233,6 +258,9 @@ public class QuestionModePigActivity extends Activity {
         mMediaPlayer.stop();
         Intent chooseMode = new Intent(QuestionModePigActivity.this, ChooseModeActivity.class);
         startActivity(chooseMode);
+        if (countDownTimer != null)
+            countDownTimer.cancel();
+        finish();
     }
 
 }

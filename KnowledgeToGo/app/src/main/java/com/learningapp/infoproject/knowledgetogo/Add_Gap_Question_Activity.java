@@ -36,6 +36,7 @@ public class Add_Gap_Question_Activity extends ActionBarActivity {
         // Get Info from SharedPreferences for User-ID
         prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
         uid = prefs.getInt("User-ID",0);
+        lid = prefs.getInt("Lecture-ID",0);
 
         // DialogBox with instructions how to mark a gap
         if(prefs.getBoolean("Instruction",true)) {

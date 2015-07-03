@@ -54,6 +54,7 @@ public class Add_Normal_Question_Activity extends ActionBarActivity {
         // Get Info from SharedPreferences for User-ID
         SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
         uid = prefs.getInt("User-ID",0);
+        lid = prefs.getInt("Lecture-ID",0);
 
         // Add answer-possibilities
         addAnswer.setOnClickListener(new View.OnClickListener() {

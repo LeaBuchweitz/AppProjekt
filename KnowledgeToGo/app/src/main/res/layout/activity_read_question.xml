@@ -14,11 +14,12 @@
         android:layout_height="150dp"
         tools:context=".MainActivity"
         android:orientation="horizontal"
-        android:weightSum="1"
-        android:padding="16dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:padding="16dp" />
 
     <ImageView
         android:layout_width="120dp"

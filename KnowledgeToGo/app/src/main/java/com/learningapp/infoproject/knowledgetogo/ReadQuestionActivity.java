@@ -56,7 +56,7 @@ public class ReadQuestionActivity extends Activity {
             background.setBackgroundResource(R.drawable.background);
         }
 
-        questionCounter = 1;
+        questionCounter = 0;
         questionContent = new ArrayList<>();
         questionType = new ArrayList<>();
         questionID = new ArrayList<>();
@@ -94,7 +94,26 @@ public class ReadQuestionActivity extends Activity {
     }
 
     public void startTask(){
-        while (questionContent.size() == 0);
+
+        if (questionContent.size() == 0){
+            AlertDialog.Builder noSelectedLecture = new AlertDialog.Builder(ReadQuestionActivity.this);
+            noSelectedLecture.setTitle("Die Vorlesung enthält keine Fragen!");
+            noSelectedLecture.setMessage("Erstelle doch welche.");
+            noSelectedLecture.setCancelable(false);
+            noSelectedLecture.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    Intent intent = new Intent(ReadQuestionActivity.this, ChooseModeActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+            noSelectedLecture.create().show();
+            questionContent.add("Keine Fragen Vorhanden.");
+            questionType.add(DBVars.QUESTION_TYPE_GAPTEXT);
+        }
+
         createText();
     }
 
@@ -106,7 +125,7 @@ public class ReadQuestionActivity extends Activity {
     }
 
     public void backTask(View view){
-        if (questionCounter > 1) {
+        if (questionCounter > 0) {
             questionCounter--;
             createText();
         }

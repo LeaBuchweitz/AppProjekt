@@ -92,14 +92,9 @@ public class ChooseModeActivity extends Activity {
             public void onClick(View v) {
                 drawer.openDrawer(Gravity.START);
 
-                SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
-                int pos = prefs.getInt("Selected-Lecture", 0);
-                if(pos != 0) {
-                    // Set color to selected lecture
-                    View view = lecture_menu.getChildAt(pos);
-                    TextView line = (TextView) view.findViewById(R.id.menu_item);
-                    line.setTextColor(Color.parseColor("#FF8FEBFF"));
-                }
+                //SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+                //int position = prefs.getInt("Selected-Lecture", 0);
+                //colorizeSelected(position);
 
             }
         });
@@ -122,8 +117,8 @@ public class ChooseModeActivity extends Activity {
                     });
                     noSelectedLecture.create().show();
                 } else {
-                    Intent readQquestion = new Intent(ChooseModeActivity.this, ReadQuestionActivity.class);
-                    startActivity(readQquestion);
+                    Intent readQuestion = new Intent(ChooseModeActivity.this, ReadQuestionActivity.class);
+                    startActivity(readQuestion);
                     mMediaPlayer.stop();
                 }
             }
@@ -251,10 +246,10 @@ public class ChooseModeActivity extends Activity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = prefs.edit();
+                                    editor.remove("Selected-Lecture");
                                     boolean t = prefs.getBoolean("Instruction",true);
                                     if(!t) {
                                         editor.remove("Instruction");
-                                        editor.remove("Selected-Lecture");
                                         editor.apply();
                                     }
                                     DatabaseController db = new DatabaseController(DBVars.REQUEST_DELETE_SCORES,
@@ -278,12 +273,10 @@ public class ChooseModeActivity extends Activity {
                             lid = lID.get(0);
 
                             // Set color to selected lecture
-                            View v = lecture_menu.getChildAt(position);
-                            TextView line = (TextView) v.findViewById(R.id.menu_item);
-                            line.setTextColor(Color.parseColor("#FF8FEBFF"));
+                            colorizeSelected(position);
 
                             SharedPreferences.Editor editor = prefs.edit();
-                            int posit = prefs.getInt("Selected-Lecture", -1);
+                            int posit = prefs.getInt("Selected-Lecture", 0);
                             editor.putInt("Lecture-ID", lid);
                             if (posit != 0) {
                                 editor.remove("Selected-Lecture");
@@ -396,6 +389,25 @@ public class ChooseModeActivity extends Activity {
                 }
             }
         });
+    }
+
+    private void colorizeSelected(int position) {
+
+        View view = lecture_menu.getChildAt(0);
+
+        // Set all lines white
+        for (int i = 1; view != null; i++){
+            TextView line = (TextView) view.findViewById(R.id.menu_item);
+            line.setTextColor(Color.WHITE);
+            view = lecture_menu.getChildAt(i);
+        }
+
+        if(position > 0) {
+            // Set color to selected lecture
+            view = lecture_menu.getChildAt(position);
+            TextView line = (TextView) view.findViewById(R.id.menu_item);
+            line.setTextColor(Color.parseColor("#FF8FEBFF"));
+        }
     }
 
     @Override
