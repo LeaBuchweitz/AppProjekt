@@ -113,6 +113,9 @@ public class DatabaseController extends Thread {
                             type.add(jO.getInt("QType"));
                             id.add(jO.getInt("QID"));
                         }
+                        if(new String(responseData).equals("[]")) {
+                            content.add("No-Question");
+                        }
                         break;
                     case DBVars.REQUEST_BEST_USER:
                         for (int i = 0; i < download.length(); i++) {

@@ -42,6 +42,9 @@ public class ChooseModeActivity extends Activity {
     private ArrayList<String> lectures = new ArrayList<String>();
     private ArrayList<Integer> lectureID = new ArrayList<Integer>();
     private MediaPlayer mMediaPlayer = new MediaPlayer();
+    private ArrayList<String> questionContent;
+    private  ArrayList<Integer> questionType;
+    private ArrayList<Integer> questionID;
 
     private int uid;
     private int lid;
@@ -390,9 +393,37 @@ public class ChooseModeActivity extends Activity {
                     });
                     noSelectedLecture.create().show();
                 } else {
-                    Intent startPlay = new Intent(ChooseModeActivity.this, QuestionModePigActivity.class);
-                    startActivity(startPlay);
-                    mMediaPlayer.stop();
+                    questionContent = new ArrayList<>();
+                    questionType = new ArrayList<>();
+                    questionID = new ArrayList<>();
+                    // Make download request for questions. The result is saved into the given ArrayLists
+                    DatabaseController db = new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
+                            "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid=" + lid,
+                            questionContent, questionType, questionID);
+                    db.start();
+                    while(db.isAlive());
+                    if(questionContent.get(0).equals("No-Question")) {
+                        AlertDialog.Builder noQuestions = new AlertDialog.Builder(ChooseModeActivity.this);
+                        noQuestions.setTitle("Für diese Vorlesungen existieren keine Fragen!");
+                        noQuestions.setMessage("Erstelle als erster eine Frage für diese Vorlesung!");
+                        noQuestions.setCancelable(true);
+                        noQuestions.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        noQuestions.create().show();
+                    } else {
+                        Intent startPlay = new Intent(ChooseModeActivity.this, QuestionModePigActivity.class);
+                        Bundle extras = new Bundle();
+                        extras.putStringArrayList("Content", questionContent);
+                        extras.putIntegerArrayList("Type", questionType);
+                        extras.putIntegerArrayList("Question-ID", questionID);
+                        startPlay.putExtras(extras);
+                        startActivity(startPlay);
+                        mMediaPlayer.stop();
+                    }
                 }
             }
         });

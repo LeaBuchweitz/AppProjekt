@@ -58,11 +58,19 @@ public class QuestionModePigActivity extends Activity {
         questionType = new ArrayList<>();
         questionID = new ArrayList<>();
 
+        /*ArrayList<String> questionContent = new ArrayList<>();
+        ArrayList<Integer> questionType = new ArrayList<>();
+        ArrayList<Integer> questionID = new ArrayList<>();
         // Make download request for questions. The result is saved into the given ArrayLists
-        db = new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
+        DatabaseController db = new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
                 "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid=" + Integer.toString(lectureID),
                 questionContent, questionType, questionID);
-        db.start();
+        db.start();*/
+
+        Bundle extras = getIntent().getExtras();
+        questionContent = (ArrayList<String>) extras.get("Content");
+        questionType = (ArrayList<Integer>) extras.get("Type");
+        questionID = (ArrayList<Integer>) extras.get("Question-ID");
 
         setContentView(R.layout.activity_question_mode_pig);
 
@@ -88,7 +96,6 @@ public class QuestionModePigActivity extends Activity {
      */
     private void startTask() {
         modeIsSend = true;
-        while (db.isAlive());
         button.setText(R.string.button_start);
         mMediaPlayer.start();
         questionTask();
