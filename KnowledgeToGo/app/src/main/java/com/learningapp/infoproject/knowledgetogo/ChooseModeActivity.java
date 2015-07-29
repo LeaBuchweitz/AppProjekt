@@ -1,5 +1,6 @@
 package com.learningapp.infoproject.knowledgetogo;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,6 +30,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -96,8 +100,8 @@ public class ChooseModeActivity extends Activity {
                 drawer.openDrawer(Gravity.START);
 
                 SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
-                int pos = prefs.getInt("Selected-Lecture", 0);
-                if(pos != 0) {
+                int pos = prefs.getInt("Selected-Lecture", -1);
+                if(pos != -1) {
                     // Set color to selected lecture
                     View view = lecture_menu.getChildAt(pos);
                     TextView line = (TextView) view.findViewById(R.id.menu_item);
@@ -136,6 +140,21 @@ public class ChooseModeActivity extends Activity {
         updateDrawer();
 
         lecture_menu.setAdapter(adapter);
+
+        drawer.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+                int pos = prefs.getInt("Selected-Lecture", -1);
+                if(pos != -1) {
+                    // Set color to selected lecture
+                    View view = lecture_menu.getChildAt(pos);
+                    TextView line = (TextView) view.findViewById(R.id.menu_item);
+                    line.setTextColor(Color.parseColor("#FF8FEBFF"));
+                }
+                return false;
+            }
+        });
 
         // Add ClickListener to enter a special lecture
         lecture_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -288,11 +307,13 @@ public class ChooseModeActivity extends Activity {
                             SharedPreferences.Editor editor = prefs.edit();
                             int posit = prefs.getInt("Selected-Lecture", -1);
                             editor.putInt("Lecture-ID", lid);
-                            if (posit != 0) {
-                                editor.remove("Selected-Lecture");
-                            }
-                            editor.putInt("Selected-Lecture", posit);
-                            editor.apply();
+                            if (posit != -1) {
+                                View v2 = lecture_menu.getChildAt(posit);
+                                TextView oldLecture = (TextView) v2.findViewById(R.id.menu_item);
+                                oldLecture.setTextColor(Color.WHITE);
+                        }
+                            editor.putInt("Selected-Lecture", position);
+                            editor.commit();
                         }
                         break;
                     }
@@ -444,9 +465,6 @@ public class ChooseModeActivity extends Activity {
         db.start();
         while (db.isAlive()) ;
         lectures.add("Zurücksetzen");
-
-
-
     }
 
     // Restart of the sound of birds
