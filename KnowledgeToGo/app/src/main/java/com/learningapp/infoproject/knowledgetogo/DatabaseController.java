@@ -74,7 +74,7 @@ public class DatabaseController extends Thread {
     public DatabaseController(int requestType, String url, ArrayList<Integer> id, int userID) {
         this.id = id;
         this.userID = userID;
-        this.url = url;
+        this.url = url.replace(" ","%20");
         this.requestType = requestType;
     }
 
@@ -122,6 +122,7 @@ public class DatabaseController extends Thread {
                             jO = download.getJSONObject(i);
                             content.add(jO.getString("UName"));
                             type.add(jO.getInt("SScore"));
+                            id.add(jO.getInt("UID"));
                         }
                         break;
                     case DBVars.REQUEST_LECTURES_DOWNLOAD:

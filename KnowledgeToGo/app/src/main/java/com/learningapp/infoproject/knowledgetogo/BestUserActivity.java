@@ -48,6 +48,8 @@ public class BestUserActivity extends ActionBarActivity {
         Bundle reachedScore = getIntent().getExtras();
         if(reachedScore != null) {
             score = reachedScore.getInt("Reached-Score");
+            names = reachedScore.getStringArrayList("names");
+            scores = reachedScore.getIntegerArrayList("scores");
         }
 
         // Get Info from SharedPreferences for User-ID
@@ -55,26 +57,26 @@ public class BestUserActivity extends ActionBarActivity {
         uid = prefs.getInt("User-ID",0);
         lid = prefs.getInt("Lecture-ID", 0);
 
+        /*
         // Show best users of this lecture
         db = new DatabaseController(DBVars.REQUEST_BEST_USER,
                 "http://android.getenv.net/?mod=Lecture&fun=getBestUser&lid="+lid, names, scores);
         db.start();
         while (db.isAlive());
-        bestUser.setText(names.get(0) + ": " + scores.get(0));
+        */
 
         // Adds best users
-        second.setText(names.get(1) + ": " + scores.get(1));
-        third.setText(names.get(2) + ": " + scores.get(2));
-
-        //for(int i = 1; i < names.size(); i++){
-           /* TextView text = new TextView(this);
-            text.setText((i+1)+". "+names.get(i) + ": " + scores.get(i));
-            text.setPadding(TEXT_PADDING, TEXT_PADDING, TEXT_PADDING, TEXT_PADDING);
-            text.setTextSize(20);
-            text.setTextColor(Color.WHITE);
-            text.setTypeface(null, Typeface.BOLD);
-            scoreList.addView(text); */
-        //}
+        switch (names.size()) {
+            case 1: bestUser.setText(names.get(0) + ": " + scores.get(0));
+                    break;
+            case 2: bestUser.setText(names.get(0) + ": " + scores.get(0));
+                    second.setText(names.get(1) + ": " + scores.get(1));
+                    break;
+            default: bestUser.setText(names.get(0) + ": " + scores.get(0));
+                    second.setText(names.get(1) + ": " + scores.get(1));
+                    third.setText(names.get(2) + ": " + scores.get(2));
+                    break;
+        }
     }
 
 

@@ -45,10 +45,13 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/distance"
-        android:layout_below="@+id/your_distance"
-        android:layout_centerHorizontal="true"
         android:textStyle="bold"
-        android:textColor="#ffffffff" />
+        android:textColor="#ffffffff"
+        android:layout_below="@+id/your_distance"
+        android:layout_alignRight="@+id/best_button"
+        android:layout_alignEnd="@+id/best_button"
+        android:layout_alignParentEnd="false"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -60,8 +63,7 @@
         android:textStyle="bold"
         android:gravity="center_horizontal"
         android:layout_below="@+id/encouragement"
-        android:layout_alignRight="@+id/score_pig"
-        android:layout_alignEnd="@+id/score_pig" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -70,7 +72,7 @@
         android:id="@+id/best_button"
         android:layout_below="@+id/rang"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="35dp"
         android:textColor="#fc000000"
         android:background="@layout/button_best_user"
         android:textStyle="bold"
@@ -82,10 +84,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/your_rang"
-        android:layout_alignTop="@+id/rang"
-        android:layout_toRightOf="@+id/rang"
         android:textColor="#ffffe46b"
         android:textStyle="bold"
-        android:layout_marginLeft="10dp"/>
+        android:gravity="center_vertical"
+        android:layout_below="@+id/rang"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

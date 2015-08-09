@@ -85,7 +85,7 @@ class PigThread extends Thread {
     private Bitmap mSchild;
 
     // Brett
-    private Bitmap mBrett;
+//    private Bitmap mBrett;
 
 
     // Stone
@@ -120,7 +120,7 @@ class PigThread extends Thread {
         mBackground2 = BitmapFactory.decodeResource(mResources,
                 R.drawable.berge);
         mSchild = BitmapFactory.decodeResource(mResources, R.drawable.schild);
-        mBrett = BitmapFactory.decodeResource(mResources, R.drawable.brett);
+       // mBrett = BitmapFactory.decodeResource(mResources, R.drawable.brett);
         mHeart = mResources.getDrawable(R.drawable.heart);
     }
 
@@ -136,21 +136,21 @@ class PigThread extends Thread {
             mIsRunning = true;
 
             mStoneX = mCanvasWidth + 1;
-            mStoneY = 130;
+            mStoneY = (int) Math.round(mCanvasHeight * 0.35) - 70;
             mFailing = false;
 
             mCloudsX = 500;
-            mCloudsY = 60;
+            mCloudsY = (int) Math.round(mCanvasHeight * 0.06);
 
             mBackgroundImageX = 0;
             mBackgroundImageY = 0;
 
             mBackground1X = 0;
-            mBackground1Y = 20;
+            mBackground1Y = (int) Math.round(mCanvasHeight * 0.02);
             mBackground1Width = mBackground1.getWidth();
 
             mBackground2X = 0;
-            mBackground2Y = 80;
+            mBackground2Y = (int) Math.round(mCanvasHeight * 0.07);
             mBackground2Width = mBackground2.getWidth();
 
             pig = new Pig(mResources, mCanvasHeight, mCanvasWidth);
@@ -165,7 +165,7 @@ class PigThread extends Thread {
 
             mWhite = new TextPaint();
             mWhite.setColor(Color.WHITE);
-            mWhite.setTextSize(25);
+            mWhite.setTextSize(21);
         }
     }
 
@@ -236,7 +236,7 @@ class PigThread extends Thread {
 
         if (mFailing) {
             if (mStoneX > mCanvasWidth/2 + 35) {
-                mStoneX = mStoneX - (int) Math.round(mSpeed * 3 * elapsed);
+                mStoneX = mStoneX - (int) Math.round(mSpeed * 3 * elapsed  * (((float) mCanvasWidth)/1080));
             } else if (mActionBegin + 3000 > now) {
                 mSpeed = 0;
                 pig.fail(0, System.currentTimeMillis(), mActionBegin + 3000 - now);
@@ -249,7 +249,7 @@ class PigThread extends Thread {
 
         if (mJumping) {
             if (mStoneX + 300 > 0) {
-                mStoneX = mStoneX - (int) Math.round(mSpeed * 3 * elapsed);
+                mStoneX = mStoneX - (int) Math.round(mSpeed * 3 * elapsed * (((float) mCanvasWidth)/1080));
             } else {
                 mJumping = false;
                 mStoneX = mCanvasWidth + 1;
@@ -313,8 +313,8 @@ class PigThread extends Thread {
         pig.draw(canvas);
 
         if (!mJumping && !mFailing) {
-            canvas.drawBitmap(mSchild, mCanvasWidth - 160, 150, null);
-            canvas.drawText(Integer.toString(30*4-((int) Math.round(mTimer*4)))+" m", mCanvasWidth - 140, 176, mWhite);
+            canvas.drawBitmap(mSchild,mCanvasWidth - 90, (int) Math.round(mCanvasHeight * 0.55), null);
+            canvas.drawText(Integer.toString(30*4-((int) Math.round(mTimer*4)))+" m", mCanvasWidth - 82, (int) Math.round(mCanvasHeight * 0.65), mWhite);
         }
 
         //canvas.drawBitmap(mBrett, -2, -5, null);
@@ -371,7 +371,7 @@ class PigThread extends Thread {
         if (!mFailing && !mJumping) {
             mJumping = true;
             mActionBegin = System.currentTimeMillis();
-            pig.jump(2000, 1000, System.currentTimeMillis());
+            pig.jump(1700, 700, System.currentTimeMillis());
         }
         mTimer = 0;
     }

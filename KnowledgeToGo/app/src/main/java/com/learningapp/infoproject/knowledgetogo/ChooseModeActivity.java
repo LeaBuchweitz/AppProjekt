@@ -50,6 +50,8 @@ public class ChooseModeActivity extends Activity {
     private ArrayList<Integer> questionType;
     private ArrayList<Integer> questionID;
 
+    private SurfaceAnimationMenu menuBackground;
+
     private int uid;
     private int lid;
 
@@ -69,6 +71,8 @@ public class ChooseModeActivity extends Activity {
         ImageButton chooseLecture = (ImageButton) findViewById(R.id.choose_lecture);
         chooseLecture.setImageResource(R.drawable.doktor_hut);
         lecture_menu = (ListView) findViewById(R.id.lecture_menu);
+
+        menuBackground = (SurfaceAnimationMenu) findViewById(R.id.surfaceDrawing);
 
         // Get Info from SharedPreferences for User-ID
         SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
@@ -124,6 +128,7 @@ public class ChooseModeActivity extends Activity {
                 } else {
                     Intent readQquestion = new Intent(ChooseModeActivity.this, ReadQuestionActivity.class);
                     startActivity(readQquestion);
+                    killBackground();
                     mMediaPlayer.stop();
                 }
             }
@@ -159,9 +164,9 @@ public class ChooseModeActivity extends Activity {
 
                         // Logout, return to Login-page and delete session cookie
                         DBVars.SESSION_COOKIE = null;
-                        Toast.makeText(ChooseModeActivity.this, "Cookie weg " + DBVars.SESSION_COOKIE, Toast.LENGTH_LONG).show();
                         Intent backLogin = new Intent(ChooseModeActivity.this, LoginBeginActivity.class);
                         startActivity(backLogin);
+                        killBackground();
                         mMediaPlayer.stop();
                         finish();
                         break;
@@ -184,6 +189,7 @@ public class ChooseModeActivity extends Activity {
                                 finish();
                                 Intent intent = new Intent(ChooseModeActivity.this, ChooseModeActivity.class);
                                 startActivity(intent);
+                                killBackground();
 
                             }
                         });
@@ -280,7 +286,8 @@ public class ChooseModeActivity extends Activity {
                             db.start();
                             drawer.closeDrawers();
                             while (db.isAlive()) ;
-                            lid = lID.get(0);
+                            if (lID.size() > 0)
+                                lid = lID.get(0);
 
                             SharedPreferences.Editor editor = prefs.edit();
                             int posit = prefs.getInt("Selected-Lecture", -1);
@@ -346,6 +353,7 @@ public class ChooseModeActivity extends Activity {
                         } else {
                             Intent gap_question = new Intent(ChooseModeActivity.this, Add_Gap_Question_Activity.class);
                             startActivity(gap_question);
+                            killBackground();
                             mMediaPlayer.stop();
                             break;
                         }
@@ -367,6 +375,7 @@ public class ChooseModeActivity extends Activity {
                         } else {
                             Intent normal_question = new Intent(ChooseModeActivity.this, Add_Normal_Question_Activity.class);
                             startActivity(normal_question);
+                            killBackground();
                             mMediaPlayer.stop();
                             break;
                         }
@@ -425,11 +434,13 @@ public class ChooseModeActivity extends Activity {
                         extras.putIntegerArrayList("Question-ID", questionID);
                         startPlay.putExtras(extras);
                         startActivity(startPlay);
+                        killBackground();
                         mMediaPlayer.stop();
                     }
                 }
             }
         });
+
     }
 
     private void colorizeSelected() {
@@ -475,5 +486,12 @@ public class ChooseModeActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();
         mMediaPlayer.stop();
+        killBackground();
+    }
+
+    private void killBackground(){
+
+        if (menuBackground.getThread() != null)
+            menuBackground.getThread().interrupt();
     }
 }

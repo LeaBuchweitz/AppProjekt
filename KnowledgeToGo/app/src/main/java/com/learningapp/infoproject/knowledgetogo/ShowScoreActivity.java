@@ -5,15 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Layout;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -28,11 +33,12 @@ public class ShowScoreActivity extends Activity {
     private float score;
     private float numberQuestions;
 
-    private int lectureId=1;
+    private int lectureId;
     private int userID;
 
     private ArrayList<String> names;
     private ArrayList<Integer> scores;
+    private ArrayList<Integer> ids;
 
     static final int TEXT_PADDING = 5;
 
@@ -46,11 +52,50 @@ public class ShowScoreActivity extends Activity {
         //LinearLayout scoreList = (LinearLayout) findViewById(R.id.bestUserList);
         ImageView scorePig = (ImageView) findViewById(R.id.score_pig);
         TextView runDistance = (TextView) findViewById(R.id.distance);
+        runDistance.setGravity(Gravity.CENTER);
         TextView encouragement = (TextView) findViewById(R.id.encouragement);
+        encouragement.setGravity(Gravity.CENTER);
         TextView rang = (TextView) findViewById(R.id.your_rang);
         final Button best = (Button) findViewById(R.id.best_button);
 
-        rang.setText("1"+".");
+
+        // Check display size for the correct background
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        if (height <= 800) {
+            RelativeLayout.LayoutParams llp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            llp.setMargins(0, -120, 0, -160);
+            scorePig.setScaleX((float) 0.5);
+            scorePig.setScaleY((float) 0.5);
+            scorePig.setLayoutParams(llp);
+            /*
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(200, 540, 0, 0);
+            rang.setLayoutParams(lp);
+            */
+        }
+
+        names = new ArrayList<>();
+        scores = new ArrayList<>();
+        ids = new ArrayList<>();
+
+        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+        lectureId = prefs.getInt("Lecture-ID", -1);
+        userID = prefs.getInt("User-ID",0);
+
+        // Show best users of this lecture
+        db = new DatabaseController(DBVars.REQUEST_BEST_USER,
+                "http://android.getenv.net/?mod=Lecture&fun=getBestUser&lid="+lectureId, names, scores, ids);
+        db.start();
+        while (db.isAlive());
+
+        for(int i = 0; i < names.size(); i++) {
+            if(ids.get(i).equals(userID)) {
+                rang.setText(i+1 + ".");
+            }
+        }
 
         // Get score-info from QuestionModePigActivity
         Bundle reachedScore = getIntent().getExtras();
@@ -59,15 +104,8 @@ public class ShowScoreActivity extends Activity {
             numberQuestions = reachedScore.getInt("Number-Questions");
         }
 
-        // Get Info from SharedPreferences for User-ID
-        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
-        userID = prefs.getInt("User-ID",0);
-
-        names = new ArrayList<>();
-        scores = new ArrayList<>();
-
-
         float tmp = score/10;
+
 
         // Enter the distance
         runDistance.setText(tmp +" km");
@@ -95,8 +133,12 @@ public class ShowScoreActivity extends Activity {
         best.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("names", names);
+                bundle.putIntegerArrayList("scores", scores);
                 Intent bestUser = new Intent(ShowScoreActivity.this, BestUserActivity.class);
                 bestUser.putExtra("Reached-Score", score);
+                bestUser.putExtras(bundle);
                 startActivity(bestUser);
             }
         });

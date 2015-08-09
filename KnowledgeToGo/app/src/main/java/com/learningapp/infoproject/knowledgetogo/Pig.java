@@ -39,7 +39,7 @@ public class Pig {
 
     // For the jump cycle
     private boolean mJumping;
-    private static final double mJumpHeight = 100;
+    private static final double mJumpHeight = 80;
     private static final int mJumpRotation = 20;
 
     // For the fail cycle

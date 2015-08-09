@@ -78,6 +78,7 @@ public class ReadQuestionActivity extends Activity {
 
         startTask();
 
+        startTask();
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

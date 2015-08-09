@@ -58,15 +58,6 @@ public class QuestionModePigActivity extends Activity {
         questionType = new ArrayList<>();
         questionID = new ArrayList<>();
 
-        /*ArrayList<String> questionContent = new ArrayList<>();
-        ArrayList<Integer> questionType = new ArrayList<>();
-        ArrayList<Integer> questionID = new ArrayList<>();
-        // Make download request for questions. The result is saved into the given ArrayLists
-        DatabaseController db = new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
-                "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid=" + Integer.toString(lectureID),
-                questionContent, questionType, questionID);
-        db.start();*/
-
         Bundle extras = getIntent().getExtras();
         questionContent = (ArrayList<String>) extras.get("Content");
         questionType = (ArrayList<Integer>) extras.get("Type");
@@ -192,6 +183,7 @@ public class QuestionModePigActivity extends Activity {
     private void endTask() {
         // Go on to Score-Activity if no life or all questions answered
         if(questionCounter == questionContent.size() || lifes == 0) {
+
             Intent showCurrentScore = new Intent(QuestionModePigActivity.this, ShowScoreActivity.class);
             Bundle extras = new Bundle();
             extras.putInt("Reached-Score", score);
@@ -202,6 +194,8 @@ public class QuestionModePigActivity extends Activity {
             QuestionModePigActivity.this.startActivity(showCurrentScore);
             QuestionModePigActivity.this.finish();
             mMediaPlayer.stop();
+            if (animation.getThread() != null)
+                animation.getThread().interrupt();
         }
     }
 
