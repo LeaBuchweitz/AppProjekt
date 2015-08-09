@@ -42,6 +42,9 @@ public class ChooseModeActivity extends Activity {
     private ArrayList<String> lectures = new ArrayList<String>();
     private ArrayList<Integer> lectureID = new ArrayList<Integer>();
     private MediaPlayer mMediaPlayer = new MediaPlayer();
+    private ArrayList<String> questionContent;
+    private  ArrayList<Integer> questionType;
+    private ArrayList<Integer> questionID;
 
     private int uid;
     private int lid;
@@ -92,9 +95,14 @@ public class ChooseModeActivity extends Activity {
             public void onClick(View v) {
                 drawer.openDrawer(Gravity.START);
 
-                //SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
-                //int position = prefs.getInt("Selected-Lecture", 0);
-                //colorizeSelected(position);
+                SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+                int pos = prefs.getInt("Selected-Lecture", 0);
+                if(pos != 0) {
+                    // Set color to selected lecture
+                    View view = lecture_menu.getChildAt(pos);
+                    TextView line = (TextView) view.findViewById(R.id.menu_item);
+                    line.setTextColor(Color.parseColor("#FF8FEBFF"));
+                }
 
             }
         });
@@ -117,8 +125,8 @@ public class ChooseModeActivity extends Activity {
                     });
                     noSelectedLecture.create().show();
                 } else {
-                    Intent readQuestion = new Intent(ChooseModeActivity.this, ReadQuestionActivity.class);
-                    startActivity(readQuestion);
+                    Intent readQquestion = new Intent(ChooseModeActivity.this, ReadQuestionActivity.class);
+                    startActivity(readQquestion);
                     mMediaPlayer.stop();
                 }
             }
@@ -246,10 +254,10 @@ public class ChooseModeActivity extends Activity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = prefs.edit();
-                                    editor.remove("Selected-Lecture");
                                     boolean t = prefs.getBoolean("Instruction",true);
                                     if(!t) {
                                         editor.remove("Instruction");
+                                        editor.remove("Selected-Lecture");
                                         editor.apply();
                                     }
                                     DatabaseController db = new DatabaseController(DBVars.REQUEST_DELETE_SCORES,
@@ -273,10 +281,12 @@ public class ChooseModeActivity extends Activity {
                             lid = lID.get(0);
 
                             // Set color to selected lecture
-                            colorizeSelected(position);
+                            View v = lecture_menu.getChildAt(position);
+                            TextView line = (TextView) v.findViewById(R.id.menu_item);
+                            line.setTextColor(Color.parseColor("#FF8FEBFF"));
 
                             SharedPreferences.Editor editor = prefs.edit();
-                            int posit = prefs.getInt("Selected-Lecture", 0);
+                            int posit = prefs.getInt("Selected-Lecture", -1);
                             editor.putInt("Lecture-ID", lid);
                             if (posit != 0) {
                                 editor.remove("Selected-Lecture");
@@ -383,31 +393,40 @@ public class ChooseModeActivity extends Activity {
                     });
                     noSelectedLecture.create().show();
                 } else {
-                    Intent startPlay = new Intent(ChooseModeActivity.this, QuestionModePigActivity.class);
-                    startActivity(startPlay);
-                    mMediaPlayer.stop();
+                    questionContent = new ArrayList<>();
+                    questionType = new ArrayList<>();
+                    questionID = new ArrayList<>();
+                    // Make download request for questions. The result is saved into the given ArrayLists
+                    DatabaseController db = new DatabaseController(DBVars.REQUEST_QUESTION_DOWNLOAD,
+                            "http://android.getenv.net/?mod=Lecture&fun=getQuestions&lid=" + lid,
+                            questionContent, questionType, questionID);
+                    db.start();
+                    while(db.isAlive());
+                    if(questionContent.get(0).equals("No-Question")) {
+                        AlertDialog.Builder noQuestions = new AlertDialog.Builder(ChooseModeActivity.this);
+                        noQuestions.setTitle("Für diese Vorlesungen existieren keine Fragen!");
+                        noQuestions.setMessage("Erstelle als erster eine Frage für diese Vorlesung!");
+                        noQuestions.setCancelable(true);
+                        noQuestions.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        noQuestions.create().show();
+                    } else {
+                        Intent startPlay = new Intent(ChooseModeActivity.this, QuestionModePigActivity.class);
+                        Bundle extras = new Bundle();
+                        extras.putStringArrayList("Content", questionContent);
+                        extras.putIntegerArrayList("Type", questionType);
+                        extras.putIntegerArrayList("Question-ID", questionID);
+                        startPlay.putExtras(extras);
+                        startActivity(startPlay);
+                        mMediaPlayer.stop();
+                    }
                 }
             }
         });
-    }
-
-    private void colorizeSelected(int position) {
-
-        View view = lecture_menu.getChildAt(0);
-
-        // Set all lines white
-        for (int i = 1; view != null; i++){
-            TextView line = (TextView) view.findViewById(R.id.menu_item);
-            line.setTextColor(Color.WHITE);
-            view = lecture_menu.getChildAt(i);
-        }
-
-        if(position > 0) {
-            // Set color to selected lecture
-            view = lecture_menu.getChildAt(position);
-            TextView line = (TextView) view.findViewById(R.id.menu_item);
-            line.setTextColor(Color.parseColor("#FF8FEBFF"));
-        }
     }
 
     @Override

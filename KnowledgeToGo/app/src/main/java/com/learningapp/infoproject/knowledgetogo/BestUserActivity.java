@@ -18,7 +18,8 @@ import java.util.ArrayList;
 public class BestUserActivity extends ActionBarActivity {
 
     private DatabaseController db;
-    private int lectureId=1;
+    SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+    private int lectureId=prefs.getInt("Lecture-ID", -1);
     private int userID;
     static final int TEXT_PADDING = 5;
     private float score;
