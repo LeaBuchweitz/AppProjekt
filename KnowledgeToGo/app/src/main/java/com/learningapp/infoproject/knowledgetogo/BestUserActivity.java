@@ -18,9 +18,11 @@ import java.util.ArrayList;
 public class BestUserActivity extends ActionBarActivity {
 
     private DatabaseController db;
-    SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
-    private int lectureId=prefs.getInt("Lecture-ID", -1);
-    private int userID;
+    // Get Info from SharedPreferences for User-ID
+    private SharedPreferences prefs;
+    private int uid;
+    private int lid;
+
     static final int TEXT_PADDING = 5;
     private float score;
     private ArrayList<String> names = new ArrayList<String>();
@@ -50,11 +52,12 @@ public class BestUserActivity extends ActionBarActivity {
 
         // Get Info from SharedPreferences for User-ID
         SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
-        userID = prefs.getInt("User-ID",0);
+        uid = prefs.getInt("User-ID",0);
+        lid = prefs.getInt("Lecture-ID", 0);
 
         // Show best users of this lecture
         db = new DatabaseController(DBVars.REQUEST_BEST_USER,
-                "http://android.getenv.net/?mod=Lecture&fun=getBestUser&lid="+lectureId, names, scores);
+                "http://android.getenv.net/?mod=Lecture&fun=getBestUser&lid="+lid, names, scores);
         db.start();
         while (db.isAlive());
         bestUser.setText(names.get(0) + ": " + scores.get(0));
