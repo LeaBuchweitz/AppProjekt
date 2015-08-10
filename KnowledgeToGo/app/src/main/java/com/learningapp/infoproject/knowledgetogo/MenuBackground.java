@@ -89,7 +89,7 @@ class MenuBackground extends Thread {
 
             mLastTime = 0;
 
-            pig = new PigMenu(mResources, (int) Math.round(mCanvasHeight * 0.5), (int) Math.round(mCanvasWidth * 0.8));
+            pig = new PigMenu(mResources, (int) Math.round(mCanvasHeight * 0.75), (int) Math.round(mCanvasWidth * 0.65));
 
         }
     }

@@ -136,7 +136,7 @@ class PigThread extends Thread {
             mIsRunning = true;
 
             mStoneX = mCanvasWidth + 1;
-            mStoneY = (int) Math.round(mCanvasHeight * 0.35) - 70;
+            mStoneY = (int) Math.round(mCanvasHeight * 0.07) + 50;
             mFailing = false;
 
             mCloudsX = 500;
