@@ -45,6 +45,8 @@ public class Parser {
             TextView text = new TextView(context);
             text.setText(elements.get(i));
             text.setPadding(TEXT_PADDING, TEXT_PADDING, TEXT_PADDING, TEXT_PADDING);
+            text.setTypeface(text.getTypeface(), Typeface.BOLD);
+            text.setTextColor(Color.BLACK);
             layout.addView(text);
         }
     }
@@ -74,6 +76,8 @@ public class Parser {
             heading.setHeight(TEXT_HEIGHT);
             heading.setTextSize(TEXT_VIEW_SIZE);
             heading.setPadding(TEXT_PADDING,TEXT_PADDING,TEXT_PADDING,TEXT_PADDING);
+            heading.setTextColor(Color.BLACK);
+            heading.setTypeface(heading.getTypeface(), Typeface.BOLD);
             layout.addView(heading);
         }
 
@@ -85,6 +89,7 @@ public class Parser {
             text.setWidth(width - 40);
             text.setPadding(20,TEXT_PADDING,TEXT_PADDING,10);
             text.setTextColor(Color.BLACK);
+            text.setTypeface(text.getTypeface(), Typeface.BOLD);
             layout.addView(text);
         }
     }
@@ -113,7 +118,10 @@ public class Parser {
             TextView heading = new TextView(context);
             heading.setText(elements.get(i));
             heading.setHeight(TEXT_HEIGHT);
+
             heading.setTextSize(TEXT_VIEW_SIZE);
+            heading.setTypeface(heading.getTypeface(), Typeface.BOLD);
+            heading.setTextColor(Color.BLACK);
             heading.setPadding(TEXT_PADDING,TEXT_PADDING,TEXT_PADDING,TEXT_PADDING);
             layout.addView(heading);
         }
@@ -126,6 +134,7 @@ public class Parser {
             text.setWidth(width - 40);
             text.setPadding(20,TEXT_PADDING,TEXT_PADDING,10);
             text.setTextColor(Color.BLACK);
+            text.setTypeface(text.getTypeface(), Typeface.BOLD);
             //text.setMinimumWidth(20);
             text.setId(i - start);
             editTextList.add(text);
@@ -176,6 +185,7 @@ public class Parser {
                 text.setTextSize(TEXT_VIEW_SIZE);
                 text.setPadding(TEXT_PADDING,TEXT_PADDING,TEXT_PADDING,TEXT_PADDING);
                 text.setTextColor(Color.BLACK);
+                text.setTypeface(text.getTypeface(), Typeface.BOLD);
                 layout.addView(text);
             } else {
                 EditText text = new EditText(context);
@@ -184,6 +194,7 @@ public class Parser {
                 text.setTextSize(EDIT_TEXT_SIZE);
                 text.setPadding(TEXT_PADDING,TEXT_PADDING,TEXT_PADDING,TEXT_PADDING);
                 text.setTextColor(Color.BLACK);
+                text.setTypeface(text.getTypeface(), Typeface.BOLD);
                 //text.setMinimumWidth(20);
                 text.setId(editTextNumber++);
                 editTextList.add(text);
@@ -271,6 +282,8 @@ public class Parser {
 
         TextView text = new TextView(context);
         text.setText("Du hast "+Integer.toString(rightAnswers)+" von "+Integer.toString(correct.size())+" richtig.");
+        text.setTextColor(Color.BLACK);
+        text.setTypeface(text.getTypeface(), Typeface.BOLD);
         text.setPadding(TEXT_PADDING, TEXT_PADDING, TEXT_PADDING, TEXT_PADDING);
         layout.addView(text);
 
@@ -312,6 +325,8 @@ public class Parser {
             heading.setHeight(TEXT_HEIGHT);
             heading.setTextSize(TEXT_VIEW_SIZE);
             heading.setPadding(TEXT_PADDING,TEXT_PADDING,TEXT_PADDING,TEXT_PADDING);
+            heading.setTextColor(Color.BLACK);
+            heading.setTypeface(heading.getTypeface(), Typeface.BOLD);
             layout.addView(heading);
         }
 
@@ -328,12 +343,16 @@ public class Parser {
             text.setTextSize(TEXT_VIEW_SIZE);
             text.setWidth(width - 40);
             text.setPadding(20,TEXT_PADDING,TEXT_PADDING,10);
+            text.setTextColor(Color.BLACK);
+            text.setTypeface(text.getTypeface(), Typeface.BOLD);
             //text.setMinimumWidth(20);
             layout.addView(text);
         }
 
         TextView text = new TextView(context);
         text.setText("Du hast "+Integer.toString(rightAnswers)+" von "+Integer.toString(correct.size())+" richtig.");
+        text.setTextColor(Color.BLACK);
+        text.setTypeface(text.getTypeface(), Typeface.BOLD);
         text.setPadding(TEXT_PADDING, TEXT_PADDING, TEXT_PADDING, TEXT_PADDING);
         layout.addView(text);
 
