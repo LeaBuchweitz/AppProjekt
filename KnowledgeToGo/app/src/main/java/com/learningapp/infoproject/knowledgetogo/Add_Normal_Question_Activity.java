@@ -3,6 +3,7 @@ package com.learningapp.infoproject.knowledgetogo;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -172,6 +173,12 @@ public class Add_Normal_Question_Activity extends ActionBarActivity {
             notValid.create().show();
             return;
         }
+    }
+
+    public void onBackPressed() {
+        Intent intent = new Intent(Add_Normal_Question_Activity.this, ChooseModeActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }

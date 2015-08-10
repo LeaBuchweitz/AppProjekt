@@ -64,7 +64,8 @@
         android:layout_below="@+id/add_question"
         android:layout_alignLeft="@+id/exam"
         android:layout_alignRight="@+id/exam"
-        android:layout_alignEnd="@+id/exam" />
+        android:layout_alignEnd="@+id/exam"
+        android:focusable="true" />
 
     <ImageButton
         android:layout_width="45dp"

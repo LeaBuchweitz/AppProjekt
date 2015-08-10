@@ -49,7 +49,6 @@ public class ShowScoreActivity extends Activity {
         setContentView(R.layout.activity_show_score);
 
         // Import layout features
-        //LinearLayout scoreList = (LinearLayout) findViewById(R.id.bestUserList);
         ImageView scorePig = (ImageView) findViewById(R.id.score_pig);
         TextView runDistance = (TextView) findViewById(R.id.distance);
         runDistance.setGravity(Gravity.CENTER);
@@ -70,11 +69,6 @@ public class ShowScoreActivity extends Activity {
             scorePig.setScaleX((float) 0.5);
             scorePig.setScaleY((float) 0.5);
             scorePig.setLayoutParams(llp);
-            /*
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(200, 540, 0, 0);
-            rang.setLayoutParams(lp);
-            */
         }
 
         names = new ArrayList<>();
@@ -84,18 +78,6 @@ public class ShowScoreActivity extends Activity {
         SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
         lectureId = prefs.getInt("Lecture-ID", -1);
         userID = prefs.getInt("User-ID",0);
-
-        // Show best users of this lecture
-        db = new DatabaseController(DBVars.REQUEST_BEST_USER,
-                "http://android.getenv.net/?mod=Lecture&fun=getBestUser&lid="+lectureId, names, scores, ids);
-        db.start();
-        while (db.isAlive());
-
-        for(int i = 0; i < names.size(); i++) {
-            if(ids.get(i).equals(userID)) {
-                rang.setText(i+1 + ".");
-            }
-        }
 
         // Get score-info from QuestionModePigActivity
         Bundle reachedScore = getIntent().getExtras();
@@ -150,24 +132,17 @@ public class ShowScoreActivity extends Activity {
 
         while (db.isAlive());
 
-        /*db = new DatabaseController(DBVars.REQUEST_BEST_USER,
-                "http://android.getenv.net/?mod=Lecture&fun=getBestUser&lid="+lectureId, names, scores);
+        // Show best users of this lecture
+        db = new DatabaseController(DBVars.REQUEST_BEST_USER,
+                "http://android.getenv.net/?mod=Lecture&fun=getBestUser&lid="+lectureId, names, scores, ids);
         db.start();
-
         while (db.isAlive());
 
-        bestUser.setText(names.get(0) + ": " + scores.get(0));
-
-        // Adds best users
-        for(int i = 1; i < names.size(); i++){
-            TextView text = new TextView(this);
-            text.setText((i+1)+". "+names.get(i) + ": " + scores.get(i));
-            text.setPadding(TEXT_PADDING, TEXT_PADDING, TEXT_PADDING, TEXT_PADDING);
-            text.setTextSize(20);
-            text.setTextColor(Color.WHITE);
-            text.setTypeface(null, Typeface.BOLD);
-            scoreList.addView(text);
-        }*/
+        for(int i = 0; i < names.size(); i++) {
+            if(ids.get(i).equals(userID)) {
+                rang.setText(i+1 + ".");
+            }
+        }
     }
 
 
@@ -191,5 +166,11 @@ public class ShowScoreActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onBackPressed() {
+        Intent intent = new Intent(ShowScoreActivity.this, ChooseModeActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

@@ -96,7 +96,7 @@ public class ReadQuestionActivity extends Activity {
 
     public void startTask(){
 
-        if (questionContent.size() == 0){
+        if (questionContent.size() == 1 && questionContent.get(0).equals("No-Question")){
             AlertDialog.Builder noSelectedLecture = new AlertDialog.Builder(ReadQuestionActivity.this);
             noSelectedLecture.setTitle("Die Vorlesung enthält keine Fragen!");
             noSelectedLecture.setMessage("Erstelle doch welche.");

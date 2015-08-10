@@ -1,6 +1,7 @@
 package com.learningapp.infoproject.knowledgetogo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -57,20 +58,15 @@ public class BestUserActivity extends ActionBarActivity {
         uid = prefs.getInt("User-ID",0);
         lid = prefs.getInt("Lecture-ID", 0);
 
-        /*
-        // Show best users of this lecture
-        db = new DatabaseController(DBVars.REQUEST_BEST_USER,
-                "http://android.getenv.net/?mod=Lecture&fun=getBestUser&lid="+lid, names, scores);
-        db.start();
-        while (db.isAlive());
-        */
-
         // Adds best users
         switch (names.size()) {
             case 1: bestUser.setText(names.get(0) + ": " + scores.get(0));
+                    second.setText("-");
+                    third.setText("-");
                     break;
             case 2: bestUser.setText(names.get(0) + ": " + scores.get(0));
                     second.setText(names.get(1) + ": " + scores.get(1));
+                    third.setText("-");
                     break;
             default: bestUser.setText(names.get(0) + ": " + scores.get(0));
                     second.setText(names.get(1) + ": " + scores.get(1));
@@ -100,5 +96,11 @@ public class BestUserActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onBackPressed() {
+        Intent intent = new Intent(BestUserActivity.this, ChooseModeActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

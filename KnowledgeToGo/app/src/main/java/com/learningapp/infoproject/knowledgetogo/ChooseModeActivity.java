@@ -67,7 +67,7 @@ public class ChooseModeActivity extends Activity {
         Button addQuestion = (Button) findViewById(R.id.add_question);
         Button read = (Button) findViewById(R.id.learn);
         addList = (ListView) findViewById(R.id.add_list);
-        Button examMode = (Button) findViewById(R.id.exam);
+        final Button examMode = (Button) findViewById(R.id.exam);
         ImageButton chooseLecture = (ImageButton) findViewById(R.id.choose_lecture);
         chooseLecture.setImageResource(R.drawable.doktor_hut);
         lecture_menu = (ListView) findViewById(R.id.lecture_menu);
@@ -160,6 +160,8 @@ public class ChooseModeActivity extends Activity {
                         // Delete User-ID from Shared Preferences
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.remove("User-ID");
+                        editor.remove("Lecture-ID");
+                        editor.remove("Selected-Lecture");
                         editor.apply();
 
                         // Logout, return to Login-page and delete session cookie
@@ -324,8 +326,10 @@ public class ChooseModeActivity extends Activity {
             public void onClick(View v) {
                 if (addList.getVisibility() == View.INVISIBLE) {
                     addList.setVisibility(View.VISIBLE);
+                    examMode.setVisibility(View.INVISIBLE);
                 } else {
                     addList.setVisibility(View.INVISIBLE);
+                    examMode.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -485,14 +489,18 @@ public class ChooseModeActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();
         mMediaPlayer.stop();
-        killBackground();
+       /* SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("User-ID");
+        editor.remove("Lecture-ID");
+        editor.remove("Selected-Lecture");
+        editor.apply(); */
     }
 
     private void killBackground(){
-        if (menuBackground.getThread() != null)
-            menuBackground.getThread().pause();
-            menuBackground.getThread().setRunning(false);
+        finish();
     }
+
 
     @Override
     public void onPause() {
