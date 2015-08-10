@@ -490,6 +490,17 @@ public class ChooseModeActivity extends Activity {
 
     private void killBackground(){
         if (menuBackground.getThread() != null)
-            menuBackground.getThread().interrupt();
+            menuBackground.getThread().pause();
+            menuBackground.getThread().setRunning(false);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mMediaPlayer != null){
+            mMediaPlayer.stop();
+        }
+        killBackground();
+    }
+
 }

@@ -240,4 +240,12 @@ public class QuestionModePigActivity extends Activity {
             countDownTimer.cancel();
         finish();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mMediaPlayer != null){
+            mMediaPlayer.stop();
+        }
+    }
 }

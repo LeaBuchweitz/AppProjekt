@@ -70,10 +70,15 @@ public class SurfaceAnimationMenu extends SurfaceView implements SurfaceHolder.C
     public void surfaceCreated(SurfaceHolder holder) {
         // start the thread here so that we don't busy-wait in run()
         // waiting for the surface to be created
-        thread.setSurfaceSize(getHeight(), getWidth());
-        thread.initialize();
-        thread.setRunning(true);
-        thread.start();
+        if (thread.getRunningState()==false){
+            thread.setSurfaceSize(getHeight(), getWidth());
+            thread.initialize();
+            thread.setRunning(true);
+            thread.start();
+        } else {
+            thread.unpause();
+            thread.setRunning(true);
+        }
     }
 
     /*
