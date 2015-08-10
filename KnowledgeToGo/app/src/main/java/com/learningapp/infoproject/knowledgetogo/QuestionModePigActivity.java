@@ -240,5 +240,4 @@ public class QuestionModePigActivity extends Activity {
             countDownTimer.cancel();
         finish();
     }
-
 }

@@ -266,6 +266,8 @@ public class Parser {
         // Adds answer-texts
         for(int i = 0; i < elements.size(); i++){
             TextView text = new TextView(context);
+            text.setTextColor(Color.BLACK);
+            text.setTypeface(text.getTypeface(), Typeface.BOLD);
             text.setText(elements.get(i));
             text.setPadding(TEXT_PADDING, TEXT_PADDING, TEXT_PADDING, TEXT_PADDING);
             if (isGap.get(i)) {
@@ -343,7 +345,6 @@ public class Parser {
             text.setTextSize(TEXT_VIEW_SIZE);
             text.setWidth(width - 40);
             text.setPadding(20,TEXT_PADDING,TEXT_PADDING,10);
-            text.setTextColor(Color.BLACK);
             text.setTypeface(text.getTypeface(), Typeface.BOLD);
             //text.setMinimumWidth(20);
             layout.addView(text);

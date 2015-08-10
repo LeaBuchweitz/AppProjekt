@@ -314,7 +314,6 @@ public class ChooseModeActivity extends Activity {
         ArrayList<String> kindQuestion = new ArrayList<String>();
         kindQuestion.add("Lückentext");
         kindQuestion.add("Stichpunkte");
-        kindQuestion.add("Frage bearbeiten");
 
         // Add list to adapter and into layout
         addList.setAdapter(new ArrayAdapter<String>(ChooseModeActivity.this, R.layout.add_question_line, kindQuestion));
@@ -490,7 +489,6 @@ public class ChooseModeActivity extends Activity {
     }
 
     private void killBackground(){
-
         if (menuBackground.getThread() != null)
             menuBackground.getThread().interrupt();
     }
