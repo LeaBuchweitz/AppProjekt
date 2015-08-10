@@ -63,6 +63,8 @@ class MenuBackground extends Thread {
         mSurfaceHolder = surfaceHolder;
         mContext = context;
 
+
+
         mResources = context.getResources();
         mClouds = BitmapFactory.decodeResource(mResources, R.drawable.clouds);
         mBackgroundImage = BitmapFactory.decodeResource(mResources,
@@ -80,14 +82,14 @@ class MenuBackground extends Thread {
             mIsRunning = true;
 
             mCloudsX = 500;
-            mCloudsY = (int) Math.round(mCanvasHeight * 0.05);
+            mCloudsY = (int) Math.round(mCanvasHeight * 0.2);
 
             mBackgroundImageX = 0;
             mBackgroundImageY = 0;
 
             mLastTime = 0;
 
-            pig = new PigMenu(mResources, (int) Math.round(mCanvasHeight * 0.2), mCanvasWidth);
+            pig = new PigMenu(mResources, (int) Math.round(mCanvasHeight * 0.5), (int) Math.round(mCanvasWidth * 0.8));
 
         }
     }
@@ -143,6 +145,7 @@ class MenuBackground extends Thread {
         long now = System.currentTimeMillis();
 
         double elapsed = (now - mLastTime) / 1000.0;
+        mLastTime = now;
 
         mTimer += elapsed;
 
@@ -192,8 +195,13 @@ class MenuBackground extends Thread {
             mCanvasHeight = height;
 
             // don't forget to resize the background image
-            mBackgroundImageWidth = Math.round(mBackgroundImage.getWidth() * mCanvasHeight / mBackgroundImage.getHeight());
-            mBackgroundImage = Bitmap.createScaledBitmap(mBackgroundImage, mBackgroundImageWidth, mCanvasHeight, true);
+            if ((mCanvasWidth/mCanvasHeight) >= (762/1442)) {
+                mBackgroundImageWidth = Math.round(mBackgroundImage.getHeight() * mCanvasWidth / mBackgroundImage.getWidth());
+                mBackgroundImage = Bitmap.createScaledBitmap(mBackgroundImage, mCanvasWidth, mBackgroundImageWidth, true);
+            } else {
+                mBackgroundImageWidth = Math.round(mBackgroundImage.getWidth() * mCanvasHeight / mBackgroundImage.getHeight());
+                mBackgroundImage = Bitmap.createScaledBitmap(mBackgroundImage, mBackgroundImageWidth, mCanvasHeight, true);
+            }
         }
     }
 

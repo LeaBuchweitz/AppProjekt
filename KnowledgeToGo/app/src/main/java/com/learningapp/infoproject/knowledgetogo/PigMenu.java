@@ -19,7 +19,7 @@ public class PigMenu {
 
     private int mCurrentFrame;    // the current frame
     private static final int mFrameCount = 2; // Count of walking pictures, the first pictures
-    private static final int mAdditionalFrames = 6;
+    private static final int mAdditionalFrames = 0;
 
     private long mFrameTicker;    // the time of the last frame update
     private int mFramePeriod;    // milliseconds between each frame (1000/fps)
@@ -39,7 +39,7 @@ public class PigMenu {
 
     public PigMenu(Resources res, int mCanvasHeight, int mCanvasWidth) {
 
-        mWalk = BitmapFactory.decodeResource(res, R.drawable.schwein);
+        mWalk = BitmapFactory.decodeResource(res, R.drawable.blinzelschwein);
 
         mCurrentFrame = 0;
 
@@ -62,12 +62,12 @@ public class PigMenu {
 
     public void update(long now) {
 
-        if (mActionAt < now && now - mActionAt < 200) {
-            mCurrentFrame = 1;
+        if (mActionAt < now && now - mActionAt < 120) {
+            mCurrentFrame = 0;
             updated = false;
         } else if (!updated) {
-            mActionAt = now + ((int) (Math.random() * 2000 + 500));
-            mCurrentFrame = 0;
+            mActionAt = now + ((int) (Math.random() * 6000 + 500));
+            mCurrentFrame = 1;
             updated = true;
         }
 
