@@ -447,13 +447,19 @@ public class ChooseModeActivity extends Activity {
     }
 
     private void colorizeSelected() {
-        SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
-        int pos = prefs.getInt("Selected-Lecture", -1);
-        if(pos != -1) {
-            // Set color to selected lecture
-            View view = lecture_menu.getChildAt(pos);
-            TextView line = (TextView) view.findViewById(R.id.menu_item);
-            line.setTextColor(Color.parseColor("#FF8FEBFF"));
+        try {
+            SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
+            int pos = prefs.getInt("Selected-Lecture", -1);
+            if (pos != -1) {
+                // Set color to selected lecture
+                View view = lecture_menu.getChildAt(pos);
+                TextView line = (TextView) view.findViewById(R.id.menu_item);
+                if (!line.getText().equals("Zurücksetzen")) {
+                    line.setTextColor(Color.parseColor("#FF8FEBFF"));
+                }
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Es ist kein Internet verfügbar.", Toast.LENGTH_LONG);
         }
     }
 
@@ -489,12 +495,6 @@ public class ChooseModeActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();
         mMediaPlayer.stop();
-       /* SharedPreferences prefs = getSharedPreferences("com.learningapp.infoproject.knowledgetogo", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.remove("User-ID");
-        editor.remove("Lecture-ID");
-        editor.remove("Selected-Lecture");
-        editor.apply(); */
     }
 
     private void killBackground(){

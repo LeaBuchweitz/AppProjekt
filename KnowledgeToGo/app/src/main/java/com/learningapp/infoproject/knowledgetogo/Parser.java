@@ -232,6 +232,10 @@ public class Parser {
         boolean parenthesisOpen = false;
 
         for(int i = 0; i < s.length(); i++){
+            if (s.charAt(i) == 'ä' || s.charAt(i) == 'ü' || s.charAt(i) == 'ö' || s.charAt(i) == 'ß'){
+                return false;
+            }
+
             if (!parenthesisOpen && s.charAt(i) == PARENTHESIS_VALUES[0]){
                 i++; // at least on char inside
                 correct = false;
@@ -240,7 +244,8 @@ public class Parser {
                 correct = true;
                 parenthesisOpen = false;
             } else if ((!parenthesisOpen && s.charAt(i) == PARENTHESIS_VALUES[1])
-                    || (parenthesisOpen && s.charAt(i) == PARENTHESIS_VALUES[0])){
+                    || (parenthesisOpen && s.charAt(i) == PARENTHESIS_VALUES[0])
+                    || (parenthesisOpen && s.charAt(i) == ' ')){
                 return false;
             }
         }
@@ -370,7 +375,7 @@ public class Parser {
         int b = 0;
         boolean isGap = beginsWithGap(s); //0 - Text; 1 - Empty field
 
-        if (isGap){
+        if (isGap) {
             a++;
             b++;
         }
@@ -381,11 +386,11 @@ public class Parser {
 
             while (b < s.length() && (s.charAt(b) != PARENTHESIS_VALUES[0]
                     && s.charAt(b) != PARENTHESIS_VALUES[1]
-                    && s.charAt(b) != ' ')){
+                    && s.charAt(b) != ' ')) {
                 b++;
             }
 
-            if (s.charAt(a) == PARENTHESIS_VALUES[1]){
+            if (s.charAt(a) == PARENTHESIS_VALUES[1]) {
                 a++;
             }
 

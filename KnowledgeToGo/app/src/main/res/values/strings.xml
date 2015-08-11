@@ -45,7 +45,9 @@
     <string name="no_question_answer">Gib sowohl Frage wie auch mindestens ein Stichwort ein!</string>
     <string name="send_to_server">Abschicken</string>
     <string name="dont_show">Diese Meldung nicht mehr anzeigen</string>
-    <string name="instruction">Bitte markiere deine Lücken beginnend mit einem { und endend mit einem }</string>
+    <string name="instruction">Bitte markiere deine Lücken beginnend mit einem { und endend mit einem } \n
+    Bitte keine Umlaute (ä, ö, ü) und kein ß verwenden!</string>
+    <string name="instruction2">Bitte keine Leerzeichen, Umlaute (ä, ö, ü) und kein ß verwenden!</string>
     <string name="title_activity_add__normal__question_">Stichwort-Frage hinzufügen</string>
     <string name="Upload_succesfull">Die Frage wurde hochgeladen!</string>
     <string name="already_uploaded">Du hast diese Frage bereist hochgeladen!</string>
@@ -68,6 +70,8 @@
     <string name="title_activity_show_score">Geschafft!</string>
     <string name="title_activity_adapter_helper">AdapterHelperActivity</string>
     <string name="title_activity_best_user">Bestenliste</string>
+    <string name="Upload_unsuccesfull">Der Upload hat leider nicht funktioniert. Versuche es noch einmal.</string>
+    <string name="notesInputNotCorrect">Du hast unzulässige Zeichen in deinen Antworten. Bitte ändere sie.</string>
 
 
 </resources>

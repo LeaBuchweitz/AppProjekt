@@ -81,7 +81,7 @@ class MenuBackground extends Thread {
 
             mIsRunning = true;
 
-            mCloudsX = 500;
+            mCloudsX = 0;
             mCloudsY = (int) Math.round(mCanvasHeight * 0.2);
 
             mBackgroundImageX = 0;
@@ -89,7 +89,7 @@ class MenuBackground extends Thread {
 
             mLastTime = 0;
 
-            pig = new PigMenu(mResources, (int) Math.round(mCanvasHeight * 0.75), (int) Math.round(mCanvasWidth * 0.65));
+            pig = new PigMenu(mResources, (int) Math.round(mCanvasHeight * 0.75), (int) Math.round(mCanvasWidth * 0.67));
 
         }
     }
@@ -152,7 +152,7 @@ class MenuBackground extends Thread {
         pig.update(now);
 
         mCloudsX = mCloudsX + mBackgroundImageWidth > 0 ?
-                mCloudsX - (int) Math.round(mSpeed * 0.4 * elapsed) :
+                mCloudsX - (int) Math.round(mSpeed * 0.3 * elapsed) :
                 mBackgroundImageWidth;
 
     }
@@ -167,6 +167,11 @@ class MenuBackground extends Thread {
         canvas.drawBitmap(mBackgroundImage, mBackgroundImageX, mBackgroundImageY, null);
 
         canvas.drawBitmap(mClouds, mCloudsX, mCloudsY, null);
+        canvas.drawBitmap(mClouds,
+                mCloudsX < 0 ?
+                        mCloudsX + mClouds.getWidth() :
+                        mCloudsX - mClouds.getWidth()
+                , mCloudsY - 10, null);
 
         pig.draw(canvas);
     }

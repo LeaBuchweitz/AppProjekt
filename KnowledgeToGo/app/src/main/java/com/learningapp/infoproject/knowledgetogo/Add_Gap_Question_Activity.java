@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 
 public class Add_Gap_Question_Activity extends ActionBarActivity {
 
@@ -82,14 +84,20 @@ public class Add_Gap_Question_Activity extends ActionBarActivity {
         }
 
         if (Parser.checkParenthesis(upload)) {
-            uploaded = true;
+            ArrayList<Integer> check = new ArrayList<Integer>();
             DatabaseController db = new DatabaseController(DBVars.REQUEST_QUESTION_INSERT,
                     "http://android.getenv.net/?mod=Lecture&fun=insertQuestion&type=" +
                             DBVars.QUESTION_TYPE_GAPTEXT +
-                            "&lid=" + lid + "&uid=" + uid + "&content=" + upload);
+                            "&lid=" + lid + "&uid=" + uid + "&content=" + upload,
+                    check);
             db.start();
             while(db.isAlive());
-            Toast.makeText(this, R.string.Upload_succesfull, Toast.LENGTH_LONG).show();
+            if (check.size()==1){
+                Toast.makeText(this, R.string.Upload_succesfull, Toast.LENGTH_LONG).show();
+                uploaded = true;
+            } else {
+                Toast.makeText(this, R.string.Upload_unsuccesfull, Toast.LENGTH_LONG).show();
+            }
         } else {
             AlertDialog.Builder notValid = new AlertDialog.Builder(this);
             notValid.setNegativeButton("Ok", new DialogInterface.OnClickListener() {

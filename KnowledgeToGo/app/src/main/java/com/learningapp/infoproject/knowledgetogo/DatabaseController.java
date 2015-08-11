@@ -40,6 +40,12 @@ public class DatabaseController extends Thread {
         this.requestType = requestType;
     }
 
+    public DatabaseController(int requestType, String url, ArrayList<Integer> type) {
+        this.url = url;
+        this.type = type;
+        this.requestType = requestType;
+    }
+
     public DatabaseController(int requestType, String url, ArrayList<String> string, ArrayList<Integer> integer) {
         this.url = url;
         this.content = string;
@@ -116,6 +122,9 @@ public class DatabaseController extends Thread {
                         if(new String(responseData).equals("[]")) {
                             content.add("No-Question");
                         }
+                        break;
+                    case DBVars.REQUEST_QUESTION_INSERT:
+                        type.add(1);
                         break;
                     case DBVars.REQUEST_BEST_USER:
                         for (int i = 0; i < download.length(); i++) {
